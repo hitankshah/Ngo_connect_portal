@@ -4,13 +4,13 @@ import 'firebase/auth';
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDFdcusLl1MZyT-KTxS4v3zM-g17iAeQqo",
-  authDomain: "ngo-portal-165f3.firebaseapp.com",
-  projectId: "ngo-portal-165f3",
-  storageBucket: "ngo-portal-165f3.appspot.com",
-  messagingSenderId: "972109409535",
-  appId: "1:972109409535:web:0b554f268e472cbbc130ca",
-  measurementId: "G-KVN3BVCYYW"
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
+  measurementId: ""
 };
 
 if (!firebase.apps.length) {
