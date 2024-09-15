@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Testing</title>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js"></script>
+    <script src="firebase-auth-otp.js" defer></script>
+</head>
+<body>
+    <div id="recaptcha-container"></div>
+    <input type="text" id="phone-number" placeholder="Enter phone number">
+    <button onclick="sendOtp(document.getElementById('phone-number').value, appVerifier)">Send OTP</button>
+    <br>
+    <input type="text" id="otp-input" placeholder="Enter OTP">
+    <button onclick="verifyOtp(document.getElementById('otp-input').value)">Verify OTP</button>
+</body>
+</html>
