@@ -1,24 +1,28 @@
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
 
-function generateReceipt(donationDetails) {
-  const doc = new PDFDocument();
-  const filePath = `./receipts/receipt_${donationDetails.donationId}.pdf`;
+function generatePDF(ngo, amount) {
+    return new Promise((resolve, reject) => {
+        const doc = new PDFDocument();
+        const pdfPath = path.join(__dirname, `receipts/${ngo.id}-receipt.pdf`);
 
-  doc.pipe(fs.createWriteStream(filePath));
-
-  doc
-    .fontSize(25)
-    .text('Donation Receipt', 100, 80)
-    .fontSize(15)
-    .text(`Thank you for your donation to ${donationDetails.ngoName}`, 100, 150)
-    .fontSize(12)
-    .text(`Amount: ${donationDetails.amount}`, 100, 200)
-    .text(`Donation ID: ${donationDetails.donationId}`, 100, 250)
-    .text('This donation is eligible for tax deduction under section 80G.', 100, 300);
-
-  doc.end();
-  return filePath;
+        doc.pipe(fs.createWriteStream(pdfPath));
+        
+        doc.fontSize(25).text("80G Donation Receipt", { align: "center" });
+        doc.moveDown();
+        doc.fontSize(16).text(`NGO Name: ${ngo.name}`);
+        doc.text(`Amount: ₹${amount}`);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`);
+        doc.text("Thank you for your generous donation!");
+        
+        doc.end();
+        
+        doc.on('finish', () => {
+            resolve(pdfPath);
+        });
+        doc.on('error', reject);
+    });
 }
 
-module.exports = generateReceipt;
+module.exports = { generatePDF };

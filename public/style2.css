@@ -1,0 +1,57 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.receipt-container {
+    background-color: white;
+    padding: 20px;
+    width: 600px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.receipt-header, .donor-info, .purpose, .payment-info, .address-info, .org-info, .tax-info {
+    margin-bottom: 20px;
+}
+
+.receipt-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.receipt-header .left p, .receipt-header .right p {
+    margin-bottom: 5px;
+}
+
+.donor-info h2 {
+    margin: 10px 0;
+}
+
+.purpose p, .payment-info p, .address-info p, .org-info p, .tax-info p {
+    margin-bottom: 5px;
+}
+
+h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+strong {
+    font-weight: bold;
+}
