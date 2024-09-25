@@ -24,10 +24,3 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Start ngrok
-        run: |
-          npm install -g ngrok
-          ngrok start --config ngrok.yml my-app
-        env:
-          NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTHTOKEN }}
