@@ -1,0 +1,7 @@
+authtoken: 2kyNMj44NDxDTmpVBNrEUARWpTc_246UWSVuddn2t8vzkX8DY
+
+# Optional: You can also define tunnels here
+tunnels:
+  my-app:
+    proto: http
+    addr: 3000
