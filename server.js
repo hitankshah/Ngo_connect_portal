@@ -1,4 +1,4 @@
-    const express = require("express");
+   const express = require("express");
     const path = require("path");
     const session = require("express-session");
     const ngoRoutes = require("./ngoRoutes");
@@ -17,9 +17,15 @@
     });
 
     app.get('/register', (req, res) => {
-      res.sendFile(path.join(__dirname, 'public','Register.html'));
+      res.sendFile(path.join(__dirname, 'public','register.html'));
+    });
+    app.get('/reset-password', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public','reset-password.html'));
     });
 
+    app.get('/update-password', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public','update-password.html'));
+    });
 
     // Logout route
     app.get('/logout', (req, res) => {
@@ -46,7 +52,7 @@
     // Use the NGO and profile routes
     app.use(ngoRoutes);
     app.use(qrRoutes);  // Add the QR routes
-
+    app.use (profileRoutes);
 
     const PORT = 3000;
     app.listen(PORT, () => {
