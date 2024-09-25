@@ -1,123 +1,77 @@
-// const express = require("express");
-// const path = require("path");
-// const session = require("express-session");
-// const { setupKinde } = require("@kinde-oss/kinde-node-express");
-// const ngoRoutes = require("./ngoRoutes");
-// const profileRoutes = require("./profileRoutes");
-// const app = express();
+    const express = require("express");
+    const path = require("path");
+    const session = require("express-session");
+    const { setupKinde } = require("@kinde-oss/kinde-node-express");
+    const ngoRoutes = require("./ngoRoutes");
+    const profileRoutes = require("./profileRoutes");
+    const qrRoutes = require('./qrRoutes'); // Updated to include qrroutes
 
-// // Kinde configuration
-// const config = {
-//   clientId: "33385d9de1de4943925d6f28e8989767",
-//   issuerBaseUrl: "https://ngoconnect.kinde.com",
-//   siteUrl: "http://localhost:3000",
-//   secret: "9tsNzjqVTcUj2J11r4b8swRhxL0ziBlOjHlxLygH7JrZGCDrNi",
-//   redirectUrl: "http://localhost:3000/kinde_callback",
-//   postLogoutRedirectUrl: "http://localhost:3000",
-//   unAuthorisedUrl: "http://localhost:3000/unauthorised",
-//   grantType: "AUTHORIZATION_CODE"
-// };
+    const app = express();
 
-// setupKinde(config, app);
+    // Kinde configuration
+    const config = {
+      clientId: "33385d9de1de4943925d6f28e8989767",
+      issuerBaseUrl: "https://ngoconnect.kinde.com",
+      siteUrl: "http://localhost:3000",
+      secret: "9tsNzjqVTcUj2J11r4b8swRhxL0ziBlOjHlxLygH7JrZGCDrNi",
+      redirectUrl: "http://localhost:3000/kinde_callback",
+      postLogoutRedirectUrl: "http://localhost:3000",
+      unAuthorisedUrl: "http://localhost:3000/unauthorised",
+      grantType: "AUTHORIZATION_CODE"
+    };
 
-// // Session configuration
-// app.use(session({
-//   secret: 'your-session-secret',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: { secure: false } // Set to true if using HTTPS
-// }));
+    setupKinde(config, app);
 
-// app.use(express.static('public'));
-// app.use(express.urlencoded({ extended: true }));
+    // Session configuration
+    app.use(session({
+      secret: '9tsNzjqVTcUj2J11r4b8swRhxL0ziBlOjHlxLygH7JrZGCDrNi',
+      resave: false,
+      saveUninitialized: true,
+      cookie: { secure: false } // Set to true if using HTTPS
+    }));
 
-// // Serve static HTML files
-// app.get('/login', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public'));
-// });
+    app.use(express.static('public'));
+    app.use(express.urlencoded({ extended: true }));
 
-// app.get('/register', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public'));
-// });
+    // Serve static HTML files
+    app.get('/login', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public'));
+    });
 
-
-// // Logout route
-// app.get('/logout', (req, res) => {
-//   const logoutUrl = `https://ngoconnect.kinde.com/v2/logout?client_id=${config.clientId}&returnTo=http://localhost:3000`;
-//   req.session.destroy(); // Clear session
-//   res.redirect(logoutUrl);
-// });
+    app.get('/register', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public'));
+    });
 
 
-// app.use("/receipts", express.static(path.join(__dirname, 'receipts')));
+    // Logout route
+    app.get('/logout', (req, res) => {
+      const logoutUrl = `https://ngoconnect.kinde.com/v2/logout?client_id=${config.clientId}&returnTo=http://localhost:3000`;
+      req.session.destroy(); // Clear session
+      res.redirect(logoutUrl);
+    });
 
-// // Use the NGO and profile routes
-// app.use(ngoRoutes);
-// app.use(profileRoutes);
 
-// const PORT = 3000;
-// app.listen(PORT, () => {
-//   console.log(`Server running on http://localhost:${PORT}`);
-// });
+    app.get("/receipts", (req, res) => {
+      res.sendFile(path.join(__dirname, 'receipts', 'receipts.html'));
+    });
 
-const express = require('express');
-const path = require('path');
-const session = require('express-session');
-const { setupKinde } = require('@kinde-oss/kinde-node-express');
-const ngoRoutes = require('./ngoRoutes');
-const qrRoutes = require('./qrRoutes'); // Updated to include qrroutes
-const profileRoutes = require('./profileRoutes');
-const app = express();
 
-// Kinde configuration
-const config = {
-  clientId: '33385d9de1de4943925d6f28e8989767',
-  issuerBaseUrl: 'https://ngoconnect.kinde.com',
-  siteUrl: 'http://localhost:3000',
-  secret: '9tsNzjqVTcUj2J11r4b8swRhxL0ziBlOjHlxLygH7JrZGCDrNi',
-  redirectUrl: 'http://localhost:3000/kinde_callback',
-  postLogoutRedirectUrl: 'http://localhost:3000',
-  unAuthorisedUrl: 'http://localhost:3000/unauthorised',
-  grantType: 'AUTHORIZATION_CODE'
-};
+    app.get('/api/receipt-data', (req, res) => {
+      if (req.session.receiptData) {
+          res.json(req.session.receiptData);
+      } else {
+          res.status(404).send('Receipt data not found.');
+      }
+  });
+  
+    
+    // Use the NGO and profile routes
+    app.use(ngoRoutes);
+    app.use(qrRoutes);  // Add the QR routes
 
-setupKinde(config, app);
+    app.use(profileRoutes);
 
-// Session configuration
-app.use(session({
-  secret: 'your-session-secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
-
-app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
-
-// Serve static HTML files
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public'));
-});
-
-app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public'));
-});
-
-// Logout route
-app.get('/logout', (req, res) => {
-  const logoutUrl = `https://ngoconnect.kinde.com/v2/logout?client_id=${config.clientId}&returnTo=http://localhost:3000`;
-  req.session.destroy(); // Clear session
-  res.redirect(logoutUrl);
-});
-
-app.use('/receipts', express.static(path.join(__dirname, 'receipts')));
-
-// Use the NGO and profile routes
-app.use(ngoRoutes);
-app.use(qrRoutes);  // Add the QR routes
-app.use(profileRoutes);
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+    const PORT = 3000;
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });

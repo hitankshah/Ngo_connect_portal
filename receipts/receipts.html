@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Receipt</title>
+    <link rel="stylesheet" href="/style2.css">
+</head>
+<body>
+    <div class="receipt-container">
+        <h1>DONATION RECEIPT</h1>
+        
+        <div class="receipt-header">
+            <div class="left">
+                <p>Receipt No.: <strong id="orderId"></strong></p>
+                <p>Date: <strong id="date"></strong></p>
+            </div>
+            <div class="right">
+                <p><strong>DUPLICATE</strong></p>
+            </div>
+        </div>
+
+        <div class="donor-info">
+            <p>Received with thanks from</p>
+            <h2 id="donorName"></h2>
+            <p>A sum of <strong id="amount"></strong></p>
+            <p>(In words) <span id="amountWords"></span> Only</p>
+        </div>
+
+        <div class="purpose">
+            <p>For: <strong>HELP POOR NEEDY / DIFFERENTLY ABLED</strong></p>
+        </div>
+
+        <div class="payment-info">
+            <p>Payment Mode: <strong>Online</strong></p>
+            <p>Order No.: <strong id="orderId"></strong></p>
+            <p>Date: <strong id="date"></strong></p>
+        </div>
+
+        <div class="address-info">
+            <h3>Address:</h3>
+            <p id="ngoAddress"></p>
+            <p>Pincode: <strong></strong></p>
+            <p>E-Mail: <strong id="ngoEmail"></strong></p>
+        </div>
+
+        <div class="org-info">
+            <p><strong id="ngoName"></strong></p>
+            <p>PAN No.: <strong id="ngoPAN"></strong></p>
+            <p>Unique Registration Number: <strong id="ngoRegNo"></strong></p>
+            <p>Approval Date: <strong id="approvalDate"></strong></p>
+        </div>
+
+        <div class="tax-info">
+            <p>For claiming Income Tax Exemption under section 80G of the Income Tax Act, 1961, please provide the correct PAN number.</p>
+            <p>Contact: .</p>
+        </div>
+    </div>
+
+    <script>
+        // Fetch receipt data from session
+        window.onload = function() {
+            fetch('/api/receipt-data') // Create this API to serve session data as JSON
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('orderId').textContent = data.orderId;
+                    document.getElementById('date').textContent = data.date;
+                    document.getElementById('donorName').textContent = data.donorName;
+                    document.getElementById('amount').textContent = `₹${data.amount}`;
+                    document.getElementById('amountWords').textContent = convertNumberToWords(data.amount);
+                    document.getElementById('ngoAddress').textContent = data.ngoAddress;
+                    document.getElementById('ngoEmail').textContent = data.ngoEmail;
+                    document.getElementById('ngoName').textContent = data.ngoName;
+                    document.getElementById('ngoPAN').textContent = data.ngoPAN;
+                    document.getElementById('ngoRegNo').textContent = data.ngoRegNo;
+                    document.getElementById('approvalDate').textContent = data.approvalDate;
+                });
+        };
+
+        function convertNumberToWords(amount) {
+            // Add logic to convert number to words
+            return 'One Hundred'; // Replace with actual conversion logic
+        }
+    </script>
+</body>
+</html>
