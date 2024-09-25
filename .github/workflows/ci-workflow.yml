@@ -24,3 +24,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Start Application
+        run: |
+          npm start &  # Assuming your start script runs the app
+          sleep 10     # Wait for the server to start
