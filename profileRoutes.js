@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/profile', protectRoute, (req, res) => {
+router.get('/profile', (req, res) => {
   const user = getUser(req); // Get the user information
   res.send(`
     <!DOCTYPE html>

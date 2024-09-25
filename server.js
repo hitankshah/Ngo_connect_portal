@@ -7,17 +7,6 @@
 
     const app = express();
 
-    
-
-    setupKinde(config, app);
-
-    // Session configuration
-    app.use(session({
-      secret: '9tsNzjqVTcUj2J11r4b8swRhxL0ziBlOjHlxLygH7JrZGCDrNi',
-      resave: false,
-      saveUninitialized: true,
-      cookie: { secure: false } // Set to true if using HTTPS
-    }));
 
     app.use(express.static('public'));
     app.use(express.urlencoded({ extended: true }));
@@ -58,7 +47,6 @@
     app.use(ngoRoutes);
     app.use(qrRoutes);  // Add the QR routes
 
-    app.use(profileRoutes);
 
     const PORT = 3000;
     app.listen(PORT, () => {
