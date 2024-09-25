@@ -1,4 +1,4 @@
-    const express = require("express");
+   const express = require("express");
     const path = require("path");
     const session = require("express-session");
     const ngoRoutes = require("./ngoRoutes");
@@ -17,7 +17,7 @@
     });
 
     app.get('/register', (req, res) => {
-      res.sendFile(path.join(__dirname, 'public'));
+      res.sendFile(path.join(__dirname, 'public','register.html'));
     });
 
 
