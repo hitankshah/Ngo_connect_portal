@@ -1,5 +1,4 @@
 const express = require('express');
-const { protectRoute, getUser } = require("@kinde-oss/kinde-node-express");
 
 const router = express.Router();
 

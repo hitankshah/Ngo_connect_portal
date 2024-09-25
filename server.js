@@ -1,24 +1,13 @@
     const express = require("express");
     const path = require("path");
     const session = require("express-session");
-    const { setupKinde } = require("@kinde-oss/kinde-node-express");
     const ngoRoutes = require("./ngoRoutes");
     const profileRoutes = require("./profileRoutes");
     const qrRoutes = require('./qrRoutes'); // Updated to include qrroutes
 
     const app = express();
 
-    // Kinde configuration
-    const config = {
-      clientId: "33385d9de1de4943925d6f28e8989767",
-      issuerBaseUrl: "https://ngoconnect.kinde.com",
-      siteUrl: "http://localhost:3000",
-      secret: "9tsNzjqVTcUj2J11r4b8swRhxL0ziBlOjHlxLygH7JrZGCDrNi",
-      redirectUrl: "http://localhost:3000/kinde_callback",
-      postLogoutRedirectUrl: "http://localhost:3000",
-      unAuthorisedUrl: "http://localhost:3000/unauthorised",
-      grantType: "AUTHORIZATION_CODE"
-    };
+    
 
     setupKinde(config, app);
 
@@ -35,7 +24,7 @@
 
     // Serve static HTML files
     app.get('/login', (req, res) => {
-      res.sendFile(path.join(__dirname, 'public'));
+      res.sendFile(path.join(__dirname, 'public','login.html'));
     });
 
     app.get('/register', (req, res) => {
