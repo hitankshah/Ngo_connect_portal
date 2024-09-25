@@ -3,41 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- Link to your CSS file -->
-    <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet">
+    <title>User Profile | NGO Connect</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8; /* Light background for better contrast */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Column layout for header and main */
+            align-items: center;
+            height: 100vh; /* Full viewport height */
+        }
+
+        header {
+            width: 100%;
+            background-color: #e3f2fd; /* Light blue background */
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px; /* Max width for header */
+            margin: auto; /* Center header */
+            padding: 0 20px; /* Side padding */
+        }
+
+        .navbar-brand {
+            color: #004d40; /* Dark teal for branding */
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        .navbar-nav li {
+            display: inline; /* Ensure items are inline */
+        }
+
+        .navbar-nav li a {
+            color: #004d40; /* Dark teal for text */
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            border-radius: 5px; /* Rounded corners for buttons */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+        }
+
+        .navbar-nav li a:hover {
+            background-color: #b2ebf2; /* Light blue on hover */
+            color: #003f36; /* Darker color on hover */
+        }
+
+        main {
+            max-width: 600px;
+            margin: 50px auto; /* Center the main section */
+            padding: 20px;
+            background-color: #ffffff; /* White background for the form */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Rounded corners */
+        }
+
+        h1, h2 {
+            color: #2c3e50; /* Darker color for headings */
+            text-align: center;
+        }
+
+        .profile-info {
+            margin: 20px 0; /* Space around profile info */
+        }
+
+        .profile-actions {
+            text-align: center; /* Center the actions */
+        }
+
+        .profile-actions a {
+            display: inline-block; /* Inline block for buttons */
+            padding: 10px 15px;
+            margin: 10px;
+            background-color: #3498db; /* Blue button color */
+            color: #ffffff;
+            border-radius: 4px;
+            text-decoration: none; /* Remove underline */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        .profile-actions a:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d; /* Light gray color for the footer */
+            font-size: 14px; /* Smaller footer font */
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin: 20px; /* Margin on small screens */
+                width: calc(100% - 40px); /* Full width minus padding */
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
+    <header>
+        <div class="header-container">
             <a class="navbar-brand" href="/index.html">NGO Connect</a>
             <ul class="navbar-nav">
                 <li><a href="/home">Home</a></li>
                 <li><a href="/donate">Donate</a></li>
                 <li><a href="/gallery">Gallery</a></li>
+                <li><a href="/update-password">Update Password</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </div>
-    </nav>
+    </header>
 
-    <div class="container">
+    <main>
         <h1>User Profile</h1>
         <div class="profile-info">
-            <h2>Welcome, [User Name]</h2>
-            <p>Email: [user@example.com]</p>
-            <p>Joined on: [Join Date]</p>
-            <p>About: [Brief description about the user]</p>
+            <h2>Welcome, <span id="userName">Loading...</span></h2>
+            <p>Email: <span id="userEmail">Loading...</span></p>
+            <p>Joined on: <span id="userJoinDate">Loading...</span></p>
+            <p>About: <span id="userDescription">Loading...</span></p>
         </div>
 
         <div class="profile-actions">
             <h3>Actions</h3>
-            <a href="/edit-profile" class="btn">Edit Profile</a>
-            <a href="/my-donations" class="btn">My Donations</a>
+            <a href="/edit-profile">Edit Profile</a>
+            <a href="/my-donations">My Donations</a>
         </div>
-    </div>
+    </main>
 
     <footer>
         <p>&copy; 2024 NGO Connect. All rights reserved.</p>
     </footer>
+
+    <script src="/scripts/profile.js"></script>
 </body>
 </html>

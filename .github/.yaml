@@ -1,27 +1,28 @@
-name: Ngo_Connect_Portal
+name: CI Workflow
 
-# Trigger this workflow on a push to the main branch
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
-# Define the job(s) to be run
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
-
+    runs-on: ubuntu-latest
+    
     steps:
-    - name: Checkout code  # Check out the code from the repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Node.js  # Example step: Setup Node.js (you can adjust based on your project)
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
 
-    - name: Install dependencies  # Example step: Install Node.js dependencies
+    - name: Install dependencies
       run: npm install
 
-    - name: Run tests  # Example step: Run tests
+    - name: Run tests
       run: npm test
