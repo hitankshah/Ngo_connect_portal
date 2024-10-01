@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <title>NGO Connect</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -8,69 +9,68 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Overpass:300,400,400i,600,700" rel="stylesheet">
 
-    <!-- External CSS libraries (if needed) -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Inline styles to change the text color -->
     <style>
-      body {
-        font-family: 'Overpass', sans-serif;
-        background-color: #f8f9fa; /* Light background */
-      }
+        body {
+            font-family: 'Overpass', sans-serif;
+            background-color: #f8f9fa; /* Light background */
+        }
 
-      .login-container {
-        max-width: 400px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
-      h1 {
-        color: #2c3e50; /* Darker color for the heading */
-      }
+        h1 {
+            color: #2c3e50; /* Darker color for the heading */
+        }
 
-      label {
-        color: #2c3e50; /* Darker color for the form labels */
-      }
+        label {
+            color: #2c3e50; /* Darker color for the form labels */
+        }
 
-      input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-      button {
-        width: 100%;
-        padding: 10px;
-        background-color: #3498db; /* Primary button color */
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db; /* Primary button color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-      button:hover {
-        background-color: #2980b9; /* Darker shade on hover */
-      }
+        button:hover {
+            background-color: #2980b9; /* Darker shade on hover */
+        }
 
-      footer {
-        text-align: center;
-        margin-top: 20px;
-        color: #7f8c8d; /* Light gray color for the footer */
-      }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d; /* Light gray color for the footer */
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
 
     <main class="login-container">
         <h1>Login</h1>
-        <form id="loginForm" method="POST" action="/api/login"> <!-- Adjust the action URL as needed -->
+        <form id="loginForm" method="POST" action="/api/login"> <!-- Updated action to point to API -->
             <div class="form-group">
                 <label for="loginId">Mobile Number or Email:</label>
-                <input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
+                <input type="email" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
@@ -86,5 +86,5 @@
         <p>&copy; ${new Date().getFullYear()} NGO Connect Portal</p>
     </footer>
 
-  </body>
+</body>
 </html>
