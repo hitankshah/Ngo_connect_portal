@@ -7,6 +7,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.0",
+    "express-session": "^1.18.0",
     "pdfkit": "^0.15.0",
     "qrcode": "^1.5.4"
   },
