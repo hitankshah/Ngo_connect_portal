@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>NGO Connect</title>
     <meta charset="utf-8">
@@ -8,69 +7,185 @@
 
     <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Overpass:300,400,400i,600,700" rel="stylesheet">
-
-    <link rel="stylesheet" href="css/style.css">
-
     <style>
+        /* General body styling */
         body {
-            font-family: 'Overpass', sans-serif;
-            background-color: #f8f9fa; /* Light background */
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8; /* Light background for better contrast */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Column layout for header and main */
+            align-items: center;
+            height: 100vh; /* Full viewport height */
         }
 
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
+        /* Header styling */
+        header {
+            width: 100%;
+            background-color: #004d40; /* Teal background for the header */
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: fixed; /* Fixes the header at the top */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Keeps it on top of other elements */
+        }
+
+        /* Header container styling */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px; /* Max width for header */
+            margin: auto; /* Center header */
+            padding: 0 20px; /* Side padding */
+        }
+
+        /* Brand/logo styling */
+        .navbar-brand {
+            color: #fff; /* White text for branding */
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #b2ebf2; /* Lighter teal on hover */
+        }
+
+        /* Navbar list styling */
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        /* Individual nav items */
+        .navbar-nav li {
+            display: inline; /* Ensure items are inline */
+        }
+
+        /* Links in navbar */
+        .navbar-nav li a {
+            color: #fff; /* White text for nav links */
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 10px 15px;
+            border-radius: 5px; /* Rounded corners for buttons */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+        }
+
+        /* Hover effect on nav links */
+        .navbar-nav li a:hover {
+            background-color: #00695c; /* Darker teal background on hover */
+            color: #ffffff; /* White text on hover */
+        }
+
+        /* Main section styling */
+        main {
+            max-width: 600px;
+            margin: 80px auto; /* Center the main section and add space below the fixed header */
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; /* White background for the form */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Rounded corners */
         }
 
-        h1 {
-            color: #2c3e50; /* Darker color for the heading */
+        h1, h2 {
+            color: #2c3e50; /* Darker color for headings */
+            text-align: center;
         }
 
         label {
-            color: #2c3e50; /* Darker color for the form labels */
+            color: #34495e; /* A slightly lighter color for labels */
+            font-weight: bold; /* Bold labels for emphasis */
+            margin-top: 10px; /* Space above label */
         }
 
-        input {
+        input, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #bdc3c7; /* Light gray border */
             border-radius: 4px;
+            font-size: 16px; /* Larger font for input */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+            transition: border-color 0.3s ease; /* Transition for border color */
+        }
+
+        input:focus {
+            border-color: #3498db; /* Change border color on focus */
+            outline: none; /* Remove default outline */
         }
 
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #3498db; /* Primary button color */
-            color: #fff;
+            padding: 12px;
+            background-color: #3498db; /* Blue button color */
+            color: #ffffff;
             border: none;
             border-radius: 4px;
+            font-size: 16px; /* Consistent font size for buttons */
             cursor: pointer;
+            transition: background-color 0.3s; /* Smooth transition */
+            margin-top: 15px; /* Space above button */
         }
 
         button:hover {
-            background-color: #2980b9; /* Darker shade on hover */
+            background-color: #2980b9; /* Darker blue on hover */
         }
 
         footer {
             text-align: center;
             margin-top: 20px;
             color: #7f8c8d; /* Light gray color for the footer */
+            font-size: 14px; /* Smaller footer font */
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                flex-direction: column; /* Stack items vertically on small screens */
+                gap: 10px;
+            }
+
+            .navbar-brand {
+                font-size: 1.5rem; /* Adjust brand size for mobile */
+            }
+
+            main {
+                margin: 80px 20px; /* Margin on small screens */
+                width: calc(100% - 40px); /* Full width minus padding */
+            }
         }
     </style>
 </head>
-
 <body>
+    <header>
+        <div class="header-container">
+            <a class="navbar-brand" href="/index.html">NGO Connect</a>
+            <ul class="navbar-nav">
+                <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="donate.html" class="nav-link">Donate</a></li>
+                <li class="nav-item"><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="/register" class="nav-link">Register</a></li>
+            </ul>
+        </div>
+    </header>
 
     <main class="login-container">
         <h1>Login</h1>
-        <form id="loginForm" method="POST" action="/api/login"> <!-- Updated action to point to API -->
+        <form id="loginForm" method="POST" action="/api/login"> <!-- Adjust the action URL as needed -->
             <div class="form-group">
                 <label for="loginId">Mobile Number or Email:</label>
-                <input type="email" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
+                <input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
@@ -85,6 +200,5 @@
     <footer>
         <p>&copy; ${new Date().getFullYear()} NGO Connect Portal</p>
     </footer>
-
 </body>
 </html>
