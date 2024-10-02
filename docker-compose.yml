@@ -1,27 +1,22 @@
-version: '3'
 services:
-  db:
-    image: mysql:9.0.1
-    environment:
-      MYSQL_ROOT_PASSWORD: ngopassword
-      MYSQL_DATABASE: ngo_portal
-    ports:
-      - "3306:3306"
-    volumes:
-      - db-data:/var/lib/mysql
-
   app:
     build: .
-    environment:
-      MYSQL_HOST: db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: ngopassword
-      MYSQL_DATABASE: ngo_portal
     ports:
       - "3000:3000"
     depends_on:
       - db
-    volumes:
-      - .:/usr/src/app
-volumes:
-  db-data:
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: ngouser
+      MYSQL_PASSWORD: ngopassword
+      MYSQL_DATABASE: ngo_portal
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ngo_portal
+      MYSQL_USER: ngouser
+      MYSQL_PASSWORD: ngopassword
+    ports:
+      - "3306:3306"

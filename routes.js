@@ -12,6 +12,7 @@ async function registerUser(username, email, password) {
 router.post('/register', async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
 
+    // Simple validation
     if (password !== confirmPassword) {
         return res.status(400).send('Passwords do not match.');
     }

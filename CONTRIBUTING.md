@@ -1,5 +1,5 @@
 
-```md
+
 # Contributing to NGO Connect Portal
 
 We welcome contributions to NGO Connect Portal! Whether you're fixing bugs, improving documentation, or adding new features, here’s how you can contribute.
