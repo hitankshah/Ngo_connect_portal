@@ -12,7 +12,7 @@ const db = mysql.createConnection({
     host: 'localhost', 
     user: '', 
     password: 'ngopassword',
-    database: 'ngoConnect'
+    database: 'ngo_portal'
 });
 
 // Connect to MySQL
