@@ -144,10 +144,13 @@
         <div class="header-container">
             <a class="navbar-brand" href="/index.html">NGO Connect</a>
             <ul class="navbar-nav">
-                <li><a href="/home">Home</a></li>
-                <li><a href="/donate">Donate</a></li>
-                <li><a href="/gallery">Gallery</a></li>
-                <li><a href="/logout">Login</a></li>
+                <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="donate.html" class="nav-link">Donate</a></li>
+                <li class="nav-item"><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="/register" class="nav-link">Register</a></li>
             </ul>
         </div>
     </header>
@@ -172,14 +175,8 @@
                 <label for="confirmPassword">Confirm Password:</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" required>
             </div>
-            <div>
-                <label for="ngoName">NGO Name:</label>
-                <input type="text" id="ngoName" name="ngoName" required>
             </div>
             <div>
-                <label for="ngoDescription">NGO Description:</label>
-                <textarea id="ngoDescription" name="ngoDescription" rows="4" required></textarea>
-            </div>
             <button type="submit">Register</button>
         </form>
     </main>

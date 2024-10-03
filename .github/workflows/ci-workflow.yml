@@ -26,5 +26,5 @@ jobs:
 
       - name: Start Application
         run: |
-          npm start &  # Assuming your start script runs the app
-          sleep 10     # Wait for the server to start
+          npm start & 
+          sleep 10     
