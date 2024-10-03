@@ -35,6 +35,10 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
 }));
+=======
+    app.get('/register', (req, res) => {
+      res.sendFile(path.join(__dirname, 'public','register.html'));
+    });
 
 // Serve static HTML files for login, registration, and password management
 app.get('/login', (req, res) => {
