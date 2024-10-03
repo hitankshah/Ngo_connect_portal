@@ -1,0 +1,18 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ngopassword  
+      MYSQL_DATABASE: ngo_portal       
+    ports:
+      - "3307:3306"
+  app:
+    build: .
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ngopassword  
+      MYSQL_DATABASE: ngo_portal
+    depends_on:
+      - db

@@ -6,8 +6,12 @@
   "author": "Your Name or Organization",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-session": "^1.18.0",
+    "mysql2": "^3.11.3",
     "pdfkit": "^0.15.0",
     "qrcode": "^1.5.4"
   },
