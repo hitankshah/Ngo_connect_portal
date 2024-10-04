@@ -182,7 +182,7 @@
 
     <main class="login-container">
         <h1>Login</h1>
-        <form id="loginForm" method="POST" action="/api/login"> <!-- Adjust the action URL as needed -->
+        <form id="loginForm" method="POST" action="/index.html"> <!-- Adjust the action URL as needed -->
             <div class="form-group">
                 <label for="loginId">Mobile Number or Email:</label>
                 <input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
@@ -198,7 +198,12 @@
     </main>
 
     <footer>
-        <p>&copy; ${new Date().getFullYear()} NGO Connect Portal</p>
+        <p>&copy; <span id="currentYear"></span> NGO Connect Portal</p>
     </footer>
+
+    <script>
+        // Update the footer with the current year
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>

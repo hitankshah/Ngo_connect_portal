@@ -105,6 +105,7 @@ const startServer = () => {
         }
     });
 
+
     app.post('/register', async (req, res) => {
         const { name, username, email, phone_number, password } = req.body;
 
@@ -133,6 +134,7 @@ const startServer = () => {
         console.log(`Server running on http://localhost:${PORT}`);
     });
 };
+
 
 // Start connection retry
 connectWithRetry();
