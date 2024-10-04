@@ -9,8 +9,8 @@ const qrRoutes = require('./qrRoutes');
 const app = express();
 
 const db = mysql.createConnection({
-    host: 'localhost', 
-    user: '', 
+    host: 'db', 
+    user: 'root', 
     password: 'ngopassword',
     database: 'ngo_portal'
 });
@@ -26,6 +26,8 @@ db.connect((err) => {
 
 // Middleware for serving static files
 app.use(express.static('public'));
+app.use(express.static('admin'));
+
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
 
 // Session middleware
