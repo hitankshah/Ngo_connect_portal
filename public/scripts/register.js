@@ -1,17 +1,19 @@
 document.getElementById('registerForm').addEventListener('submit', function (event) {
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
+    const errorContainer = document.getElementById('errorContainer');
+    errorContainer.innerHTML = ""; // Clear previous messages
 
     if (password !== confirmPassword) {
         event.preventDefault();
-        alert("Passwords do not match!");
+        errorContainer.innerHTML += "<p class='error'>Passwords do not match!</p>";
         return; 
     }
 
     const passwordStrength = checkPasswordStrength(password);
     if (!passwordStrength) {
         event.preventDefault();
-        alert("Password must be at least 8 characters long and contain at least one number and one special character.");
+        errorContainer.innerHTML += "<p class='error'>Password must be at least 8 characters long and contain at least one number and one special character.</p>";
     }
 });
 
