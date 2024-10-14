@@ -182,16 +182,9 @@
 
     <main class="login-container">
         <h1>Login</h1>
-        <form id="loginForm" method="POST" action="login.html">
-            <div class="form-group">
-                <label for="loginId">Mobile Number or Email:</label>
-<input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email"
-       pattern="^(\d{10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$" title="Enter a valid 10-digit mobile number or email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
-            </div>
+        <form action="/login" method="POST">
+            <input type="text" name="usernameOrEmail" placeholder="Username or Email" required>
+            <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
         <p>Don't have an account? <a href="register.html">Register here</a></p>

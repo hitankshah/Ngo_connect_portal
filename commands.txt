@@ -25,6 +25,7 @@ mysql -h 127.0.0.1 -P 3307 -u root -p ngo_portal < updated_ngo_portal_dump.sql
 
 docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopassword ngo_portal > ngo_portal_dump.sql
 
+
 ## import  database important files 
 docker exec -i ngo_connect_portal-db-1 /usr/bin/mysql -u root --password=ngopassword ngo_portal < ngo_portal_dump.sql
 
@@ -36,3 +37,9 @@ docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopas
 ## import
 
 docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopassword ngo_portal > sql/ngo_portal.sql
+
+
+
+Export
+
+docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopassword --complete-insert --extended-insert --single-transaction ngo_portal > sql/ngo_portal.sql
