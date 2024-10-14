@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db:
     image: mysql:8.0.0
@@ -8,9 +8,11 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - db_data:/var/lib/mysql  # Use Docker's internal volume for MySQL data
-      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql  # Initialization script
-  
+      - db_data:/var/lib/mysql
+      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql
+    networks:
+      - ngo_network
+
   app:
     build: .
     environment:
@@ -22,7 +24,12 @@ services:
       - db
     ports:
       - "3000:3000"
-    command: ["node", "server.js"]
+    networks:
+      - ngo_network
+
+networks:
+  ngo_network:
+    driver: bridge
 
 volumes:
-  db_data:  # Declare a named volume for MySQL data
+  db_data:

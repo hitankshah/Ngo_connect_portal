@@ -11,3 +11,29 @@ use ngo_portal;
 show tables;
 
 select * from users;
+
+Create a SQL dump of your current database state using the following command:
+
+mysqldump -h 127.0.0.1 -P 3307 -u root -p ngo_portal > updated_ngo_portal_dump.sql
+
+Share the updated_ngo_portal_dump.sql file with your friend. They can then import this file into their local database with:
+
+mysql -h 127.0.0.1 -P 3307 -u root -p ngo_portal < updated_ngo_portal_dump.sql
+
+
+
+##Export the Database:  dump
+
+docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopassword ngo_portal > ngo_portal_dump.sql
+
+## import  database important files 
+docker exec -i ngo_connect_portal-db-1 /usr/bin/mysql -u root --password=ngopassword ngo_portal < ngo_portal_dump.sql
+
+
+
+##  Export the Database:  main
+docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopassword ngo_portal > ngo_portal_dump.sql
+
+#import
+docker exec -i ngo_connect_portal-db-1 /usr/bin/mysql -u root --password=ngopassword ngo_portal < ngo_portal_dump.sql
+
