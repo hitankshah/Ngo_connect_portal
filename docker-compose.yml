@@ -8,7 +8,9 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql  
+      - db_data:/var/lib/mysql  # Use Docker's internal volume for MySQL data
+      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql  # Initialization script
+  
   app:
     build: .
     environment:
@@ -20,4 +22,7 @@ services:
       - db
     ports:
       - "3000:3000"
-    command: ["node", "server.js"] 
+    command: ["node", "server.js"]
+
+volumes:
+  db_data:  # Declare a named volume for MySQL data
