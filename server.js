@@ -7,6 +7,8 @@ const ngoRoutes = require("./ngoRoutes");
 const profileRoutes = require("./profileRoutes");
 const qrRoutes = require('./qrRoutes');
 require('dotenv').config();
+const adminRoutes = require('./adminRoutes');
+
 
 const app = express();
 
@@ -98,7 +100,27 @@ const startServer = () => {
     app.use(express.static('public'));
     app.use(express.static('admin'));
 
-    // Serve static HTML files for login, registration, and password management
+    app.use('/admin', adminRoutes);
+
+    // Serve static HTML files for login, registration, and password managemen
+    
+   app.get ('/admin',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'admin.html'))
+   });
+  
+   app.get ('/adminlogin',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'adminLogin.html'))
+   });
+   app.get ('/dashboard',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'dashboad.html'))
+   });
+   app.get ('/user_management',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'user_management.html'))
+   });
+
+
+
+//public 
     app.get('/login', (req, res) => {
         res.sendFile(path.join(__dirname, 'public', 'login.html'));
     });
@@ -202,6 +224,7 @@ const startServer = () => {
     app.use(ngoRoutes);
     app.use(qrRoutes);
     app.use(profileRoutes);
+    
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {

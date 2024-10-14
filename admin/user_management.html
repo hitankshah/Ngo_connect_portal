@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>User Management</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <style>
+    .image-preview {
+      max-width: 200px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Admin Dashboard</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="admin.html"><i class="fas fa-user-shield"></i> Admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="user_management.html"><i class="fas fa-users"></i> User Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="adminLogin.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="mt-4">
+      <h3>User Management</h3>
+      <p>Manage users, view their profiles, handle user permissions, and manage NGOs from this section.</p>
+
+      <!-- Add New NGO Form -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Add New NGO</h5>
+        </div>
+        <div class="card-body">
+          <form id="addNgoForm">
+            <div class="form-group">
+              <label for="ngoName">NGO Name</label>
+              <input type="text" class="form-control" id="ngoName" placeholder="Enter NGO Name" required>
+            </div>
+            <div class="form-group">
+              <label for="ngoDescription">Description</label>
+              <textarea class="form-control" id="ngoDescription" rows="3" placeholder="Enter Description" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="ngoPanNumber">PAN Number</label>
+              <input type="text" class="form-control" id="ngoPanNumber" placeholder="Enter PAN Number (10 characters)" required pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}">
+            </div>
+            <div class="form-group">
+              <label for="ngoAddress">Address</label>
+              <input type="text" class="form-control" id="ngoAddress" placeholder="Enter Address" required>
+            </div>
+            <div class="form-group">
+              <label for="ngoPurpose">What Does the NGO Do?</label>
+              <textarea class="form-control" id="ngoPurpose" rows="3" placeholder="Enter Purpose of NGO" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="ngoCharityId">Charity ID</label>
+              <input type="text" class="form-control" id="ngoCharityId" placeholder="Enter Charity ID" required>
+            </div>
+            <div class="form-group">
+              <label for="ngoPhoto">Upload Photo</label>
+              <input type="file" class="form-control-file" id="ngoPhoto" accept="image/*" required onchange="previewImage(event)">
+              <img id="imagePreview" class="image-preview" src="" alt="Image Preview" style="display:none;">
+            </div>
+            <button type="submit" class="btn btn-primary">Add NGO</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- NGO List -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>Existing NGOs</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">NGO Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="ngoList">
+              <!-- NGO list will be populated here dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- User Feedback Section -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5>User Feedback</h5>
+        </div>
+        <div class="card-body">
+          <form id="feedbackForm">
+            <div class="form-group">
+              <label for="userFeedback">Feedback</label>
+              <textarea class="form-control" id="userFeedback" rows="3" placeholder="Enter your feedback" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Submit Feedback</button>
+          </form>
+          <div id="feedbackMessage" class="mt-2" style="display:none;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="text-center mt-5">
+    <p>&copy; 2024 Admin Dashboard. All Rights Reserved.</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Function to handle NGO addition
+    document.getElementById('addNgoForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const ngoName = document.getElementById('ngoName').value;
+      const ngoDescription = document.getElementById('ngoDescription').value;
+
+      const ngoList = document.getElementById('ngoList');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `<td>${ngoName}</td><td>${ngoDescription}</td><td><button class="btn btn-danger btn-sm" onclick="deleteNgo(this)">Delete</button></td>`;
+      ngoList.appendChild(newRow);
+
+      // Clear the form
+      this.reset();
+      document.getElementById('imagePreview').style.display = 'none';
+
+      // Redirect to demongo.html after a brief delay
+      setTimeout(function() {
+        window.location.href = 'demongo.html';
+      }, 1000); // Redirect after 1 second
+    });
+
+    // Function to handle NGO deletion
+    function deleteNgo(button) {
+      const row = button.closest('tr');
+      row.remove();
+    }
+
+    // Function to handle feedback submission
+    document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const feedback = document.getElementById('userFeedback').value;
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      feedbackMessage.innerHTML = 'Feedback submitted: ' + feedback;
+      feedbackMessage.style.display = 'block';
+      this.reset();
+    });
+
+    // Function to preview the uploaded image
+    function previewImage(event) {
+      const imagePreview = document.getElementById('imagePreview');
+      imagePreview.src = URL.createObjectURL(event.target.files[0]);
+      imagePreview.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
