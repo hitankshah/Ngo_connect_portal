@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const ngoRoutes = require("./ngoRoutes");
 const profileRoutes = require("./profileRoutes");
 const qrRoutes = require('./qrRoutes');
-require('dotenv').config(); // Use dotenv to manage environment variables
+require('dotenv').config(); 
 
 const app = express();
 
@@ -109,7 +109,6 @@ const startServer = () => {
     app.post('/register', async (req, res) => {
         const { name, username, email, phone_number, password } = req.body;
 
-        // Input validation
         if (!name || !username || !email || !phone_number || !password) {
             return res.status(400).send('All fields are required.');
         }
