@@ -63,7 +63,7 @@ router.get('/ngo/:id', (req, res) => {
   `);
 });
 
-// Handle form submission and generate the QR code with the dynamic amount
+// Handle form submission and generate the QR code with the dynamic amount and UPI deep link
 router.post('/generate-qr/:id', (req, res) => {
   const ngo = ngos.find(n => n.id === parseInt(req.params.id));
   if (!ngo) {
@@ -72,6 +72,7 @@ router.post('/generate-qr/:id', (req, res) => {
 
   const amount = req.body.amount;
   const qrData = `upi://pay?pa=${ngo.upiID}&pn=${ngo.ngoName}&am=${amount}&cu=INR`;
+  const upiDeepLink = qrData;
 
   // Generate QR code
   qrcode.toDataURL(qrData, function (err, url) {
@@ -80,7 +81,7 @@ router.post('/generate-qr/:id', (req, res) => {
       return res.status(500).send('Error generating QR code');
     }
 
-    // Send the receipt with NGO name and amount
+    // Send the receipt with NGO name, amount, QR code, and UPI deep link
     res.send(`
       <!DOCTYPE html>
       <html lang="en">
@@ -95,6 +96,11 @@ router.post('/generate-qr/:id', (req, res) => {
         <h2>Scan the QR Code to Complete the Payment</h2>
         <img src="${url}" alt="QR Code">
         <p>Amount: INR ${amount}</p>
+        
+        <h2>Or click the link below to pay:</h2>
+        <a href="${upiDeepLink}">Pay INR ${amount} to ${ngo.ngoName} via UPI</a>
+        
+        <br><br>
         <a href="/ngo/${ngo.id}">Go Back</a>
       </body>
       </html>

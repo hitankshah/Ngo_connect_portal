@@ -167,7 +167,7 @@
 <body>
     <header>
         <div class="header-container">
-            <a class="navbar-brand" href="/index.html">NGO Connect</a>
+            <a class="navbar-brand" href="index.html">NGO Connect</a>
             <ul class="navbar-nav">
                 <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
                 <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
@@ -182,10 +182,11 @@
 
     <main class="login-container">
         <h1>Login</h1>
-        <form id="loginForm" method="POST" action="/index.html"> <!-- Adjust the action URL as needed -->
+        <form id="loginForm" method="POST" action="login.html">
             <div class="form-group">
                 <label for="loginId">Mobile Number or Email:</label>
-                <input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
+<input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email"
+       pattern="^(\d{10}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$" title="Enter a valid 10-digit mobile number or email">
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
@@ -202,7 +203,6 @@
     </footer>
 
     <script>
-        // Update the footer with the current year
         document.getElementById("currentYear").textContent = new Date().getFullYear();
     </script>
 </body>
