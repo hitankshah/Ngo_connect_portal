@@ -19,7 +19,7 @@ const ngos = [
 
 // Home route to list all NGOs with links to their donation pages
 router.get('/ngodetails', (req, res) => {
-  const ngoLinks = ngos.map(ngo => `<li class="list-group-item"><a href="/ngo/${ngo.id}">${ngo.ngoName}</a></li>`).join('');
+  const ngoLinks = ngos.map(ngo => `<li><a href="/ngo/${ngo.id}">${ngo.ngoName}</a></li>`).join('');
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -27,16 +27,10 @@ router.get('/ngodetails', (req, res) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>NGO QR Code Payment</title>
-      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-      <div class="container mt-5">
-        <h1>Select an NGO to Donate</h1>
-        <ul class="list-group">${ngoLinks}</ul>
-      </div>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <h1>Select an NGO to Donate</h1>
+      <ul>${ngoLinks}</ul>
     </body>
     </html>
   `);
@@ -56,22 +50,14 @@ router.get('/ngo/:id', (req, res) => {
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Donate to ${ngo.ngoName}</title>
-      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-      <div class="container mt-5">
-        <h1>Donate to ${ngo.ngoName}</h1>
-        <form action="/generate-qr/${ngo.id}" method="POST">
-          <div class="form-group">
-            <label for="amount">Enter Amount (INR): </label>
-            <input type="number" id="amount" name="amount" class="form-control" min="1" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Generate QR Code</button>
-        </form>
-      </div>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <h1>Donate to ${ngo.ngoName}</h1>
+      <form action="/generate-qr/${ngo.id}" method="POST">
+        <label for="amount">Enter Amount (INR): </label>
+        <input type="number" id="amount" name="amount" min="1" required>
+        <button type="submit">Generate QR Code</button>
+      </form>
     </body>
     </html>
   `);
@@ -86,6 +72,7 @@ router.post('/generate-qr/:id', (req, res) => {
 
   const amount = req.body.amount;
   const qrData = `upi://pay?pa=${ngo.upiID}&pn=${ngo.ngoName}&am=${amount}&cu=INR`;
+  const upiDeepLink = qrData;
 
   // Generate QR code
   qrcode.toDataURL(qrData, function (err, url) {
@@ -102,23 +89,19 @@ router.post('/generate-qr/:id', (req, res) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>QR Code for ${ngo.ngoName}</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
       </head>
       <body>
-        <div class="container mt-5">
-          <h1>Donation Receipt for ${ngo.ngoName}</h1>
-          <p>Thank you for donating INR ${amount} to ${ngo.ngoName}.</p>
-          <h2>Scan the QR Code to Complete the Payment</h2>
-          <img src="${url}" alt="QR Code" class="img-fluid">
-          <p>Amount: INR ${amount}</p>
-          <h2>Or click the link below to pay:</h2>
-          <a href="${qrData}" class="btn btn-success">Pay INR ${amount} to ${ngo.ngoName} via UPI</a>
-          <br><br>
-          <a href="/ngo/${ngo.id}" class="btn btn-secondary">Go Back</a>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <h1>Donation Receipt for ${ngo.ngoName}</h1>
+        <p>Thank you for donating INR ${amount} to ${ngo.ngoName}.</p>
+        <h2>Scan the QR Code to Complete the Payment</h2>
+        <img src="${url}" alt="QR Code">
+        <p>Amount: INR ${amount}</p>
+        
+        <h2>Or click the link below to pay:</h2>
+        <a href="${upiDeepLink}">Pay INR ${amount} to ${ngo.ngoName} via UPI</a>
+        
+        <br><br>
+        <a href="/ngo/${ngo.id}">Go Back</a>
       </body>
       </html>
     `);
