@@ -165,7 +165,7 @@ const startServer = () => {
             req.session.userId = user.id;
             req.session.username = user.username;
 
-            res.status(200).send('Login successful.');
+            res.redirect('/index.html');
         } catch (error) {
             console.error('Error during login:', error);
             res.status(500).send('Internal server error.');
@@ -213,7 +213,7 @@ const startServer = () => {
 
             const passwordHash = await hashPassword(password); 
             await insertUser(username, email, phone_number, passwordHash, name); 
-            res.status(201).send('User registered successfully');
+            res.redirect('/login.html');
         } catch (error) {
             console.error('Error inserting user:', error);
             res.status(500).send('Error registering user');
