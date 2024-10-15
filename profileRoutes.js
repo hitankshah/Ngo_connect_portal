@@ -2,6 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+function getUser(req) {
+    // Assuming user information is stored in the session
+    return req.session.user || {}; // Return empty object if user is not found
+}
+
 router.get('/profile', (req, res) => {
   const user = getUser(req); // Get the user information
   res.send(`
@@ -38,3 +43,6 @@ router.get('/profile', (req, res) => {
 });
 
 module.exports = router;
+
+
+

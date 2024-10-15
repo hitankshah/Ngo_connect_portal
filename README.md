@@ -68,7 +68,7 @@ You’ll need the following tools:
     Run the following commands to create and configure the MySQL database:
 
     ```sql
-    CREATE DATABASE ngo_connect;
+    CREATE DATABASE ngo_portal;
     ```
 
 6. Start the application:

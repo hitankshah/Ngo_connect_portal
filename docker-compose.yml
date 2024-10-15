@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   db:
     image: mysql:8.0.0
@@ -8,7 +8,10 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql  
+      - db_data:/var/lib/mysql
+      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql
+    networks:
+      - ngo_network
 
   app:
     build: .
@@ -21,4 +24,12 @@ services:
       - db
     ports:
       - "3000:3000"
-    command: ["node", "server.js"]
+    networks:
+      - ngo_network
+
+networks:
+  ngo_network:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -1,0 +1,82 @@
+<!-- ngo_details.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>NGO Details</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .ngo-photo {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">NGO Details</a>
+    </nav>
+
+    <section class="mt-4">
+      <h3 class="text-center">NGO Added Successfully!</h3>
+
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-title">NGO Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-4">
+              <img src="path/to/ngo_photo.jpg" alt="NGO Photo" class="ngo-photo rounded">
+            </div>
+            <div class="col-md-8">
+              <h5 class="card-title" id="ngoName">NGO Name: <span class="text-primary" id="displayNgoName"></span></h5>
+              <p class="card-text" id="ngoDescription">Description: <span id="displayNgoDescription"></span></p>
+              <p class="card-text" id="ngoWork">Work: <span id="displayNgoWork"></span></p>
+              <p class="card-text" id="ngoAddress">Address: <span id="displayNgoAddress"></span></p>
+              <p class="card-text" id="ngoCharityId">Charity ID: <span id="displayNgoCharityId"></span></p>
+              <p class="card-text" id="ngoPanNumber">PAN Number: <span id="displayNgoPanNumber"></span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <a href="user_management.html" class="btn btn-primary">Back to User Management</a>
+      </div>
+    </section>
+  </div>
+
+  <footer class="text-center mt-5">
+    <p>&copy; 2024 Admin Dashboard. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Function to get URL parameters
+    function getUrlParams() {
+      const params = {};
+      const queryString = window.location.search.substring(1);
+      const regex = /([^&=]+)=([^&]*)/g;
+      let m;
+      while (m = regex.exec(queryString)) {
+        params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+      }
+      return params;
+    }
+
+    // Display NGO details on the page
+    const params = getUrlParams();
+    document.getElementById("displayNgoName").innerText = params.ngoName || "N/A";
+    document.getElementById("displayNgoDescription").innerText = params.ngoDescription || "N/A";
+    document.getElementById("displayNgoWork").innerText = params.ngoWork || "N/A";
+    document.getElementById("displayNgoAddress").innerText = params.ngoAddress || "N/A";
+    document.getElementById("displayNgoCharityId").innerText = params.ngoCharityId || "N/A";
+    document.getElementById("displayNgoPanNumber").innerText = params.ngoPanNumber || "N/A";
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

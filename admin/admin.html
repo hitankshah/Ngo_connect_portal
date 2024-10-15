@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Panel</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-action {
+            margin-top: 20px;
+        }
+
+        .admin-form {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-list {
+            margin-top: 20px;
+        }
+
+        .admin-list table {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html"><i class="fas fa-user-shield"></i> Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user_management.html"><i class="fas fa-users"></i> User Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminLogin.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <section class="mt-4">
+            <h3>Admin Panel</h3>
+            <p>This section allows you to view reports, manage permissions, and oversee the platform's health and statistics.</p>
+        </section>
+
+        <div class="admin-action">
+            <div class="admin-form">
+                <h5>Create New Admin</h5>
+                <form id="createAdminForm">
+                    <div class="form-group">
+                        <label for="newAdminUsername">Username</label>
+                        <input type="text" class="form-control" id="newAdminUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newAdminPassword">Password</label>
+                        <input type="password" class="form-control" id="newAdminPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Create Admin</button>
+                </form>
+            </div>
+
+            <div class="admin-form mt-4">
+                <h5>Delete Existing Admin</h5>
+                <form id="deleteAdminForm">
+                    <div class="form-group">
+                        <label for="deleteAdminUsername">Username</label>
+                        <input type="text" class="form-control" id="deleteAdminUsername" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Delete Admin</button>
+                </form>
+            </div>
+
+            <div class="admin-list mt-4">
+                <h5>Current Admins</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminListBody">
+                        <tr><td>Maharshi</td></tr>
+                        <tr><td>Hitank</td></tr>
+                        <tr><td>Vedant</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2024 Admin Dashboard. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const admins = ['Maharshi', 'Hitank', 'Vedant'];
+
+        document.getElementById('createAdminForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+            const username = document.getElementById('newAdminUsername').value;
+            const password = document.getElementById('newAdminPassword').value;
+
+            // Simulating creating an admin
+            admins.push(username);
+            alert(`Admin created successfully:\nUsername: ${username}\nPassword: ${password}`);
+            document.getElementById('createAdminForm').reset(); // Reset form
+            updateAdminList(); // Update the admin list
+        });
+
+        document.getElementById('deleteAdminForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+            const username = document.getElementById('deleteAdminUsername').value;
+
+            // Simulating deleting an admin
+            const index = admins.indexOf(username);
+            if (index > -1) {
+                admins.splice(index, 1);
+                alert(`Admin deleted successfully:\nUsername: ${username}`);
+                document.getElementById('deleteAdminForm').reset(); // Reset form
+                updateAdminList(); // Update the admin list
+            } else {
+                alert(`Admin not found:\nUsername: ${username}`);
+            }
+        });
+
+        function updateAdminList() {
+            const adminListBody = document.getElementById('adminListBody');
+            adminListBody.innerHTML = ''; // Clear existing list
+
+            admins.forEach(admin => {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.textContent = admin;
+                row.appendChild(cell);
+                adminListBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+
+</html>

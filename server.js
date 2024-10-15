@@ -6,24 +6,47 @@ const bcrypt = require("bcrypt");
 const ngoRoutes = require("./ngoRoutes");
 const profileRoutes = require("./profileRoutes");
 const qrRoutes = require('./qrRoutes');
-require('dotenv').config(); 
+require('dotenv').config();
+const adminRoutes = require('./adminRoutes');
+
 
 const app = express();
 
 // MySQL database connection
 const db = mysql.createConnection({
-    host: 'db',
-    user: 'root',
-    password: process.env.DB_PASSWORD || 'ngopassword', // Use environment variable
-    database: 'ngo_portal',
+    host: process.env.DB_HOST || 'db',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'ngopassword',
+    database: process.env.DB_NAME || 'ngo_portal',
 });
+
+// Function to find a user by username or email
+const findUser = async (usernameOrEmail) => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
+        db.query(query, [usernameOrEmail, usernameOrEmail], (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results[0]); // Return the first matched user
+        });
+    });
+};
+
+// Middleware for parsing JSON data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware for session management
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'your_secret_key', // Use environment variable
+    secret: process.env.SESSION_SECRET || 'your_secret_key',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using HTTPS
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: 'strict'
+    }
 }));
 
 // Retry connecting to MySQL
@@ -31,18 +54,31 @@ const connectWithRetry = () => {
     db.connect((err) => {
         if (err) {
             console.error('Error connecting to MySQL, retrying in 5 seconds:', err);
-            setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+            setTimeout(connectWithRetry, 5000);
         } else {
             console.log('Connected to MySQL...');
-            startServer(); // Start the server after successful connection
+            startServer();
         }
     });
 };
 
 // Function to hash passwords
 const hashPassword = async (password) => {
-    const saltRounds = 10; 
+    const saltRounds = 10;
     return await bcrypt.hash(password, saltRounds);
+};
+
+// Function to check if user exists
+const userExists = async (usernameOrEmail) => {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE username = ? OR email = ?';
+        db.query(query, [usernameOrEmail, usernameOrEmail], (error, results) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(results.length > 0);
+        });
+    });
 };
 
 // Function to insert a new user into the database
@@ -64,10 +100,27 @@ const startServer = () => {
     app.use(express.static('public'));
     app.use(express.static('admin'));
 
-    // Middleware for parsing URL-encoded data
-    app.use(express.urlencoded({ extended: true }));
+    app.use('/admin', adminRoutes);
 
-    // Serve static HTML files for login, registration, and password management
+    // Serve static HTML files for login, registration, and password managemen
+    
+   app.get ('/admin',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'admin.html'))
+   });
+  
+   app.get ('/adminlogin',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'adminLogin.html'))
+   });
+   app.get ('/dashboard',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'dashboad.html'))
+   });
+   app.get ('/user_management',(req, res)=>{
+    res.sendFile(path.join(__dirname, 'admin', 'user_management.html'))
+   });
+
+
+
+//public 
     app.get('/login', (req, res) => {
         res.sendFile(path.join(__dirname, 'public', 'login.html'));
     });
@@ -84,11 +137,50 @@ const startServer = () => {
         res.sendFile(path.join(__dirname, 'public', 'update-password.html'));
     });
 
+    // Login route
+    app.post('/login', async (req, res) => {
+        const { usernameOrEmail, password } = req.body;
+        console.log('Login attempt:', { usernameOrEmail, password: '[REDACTED]' });
+
+        if (!usernameOrEmail || !password) {
+            return res.status(400).send('Username or email and password are required.');
+        }
+
+        try {
+            const user = await findUser(usernameOrEmail);
+            console.log('User found:', user ? 'Yes' : 'No');
+
+            if (!user) {
+                return res.status(401).send('Invalid username or password.');
+            }
+
+            const isMatch = await bcrypt.compare(password, user.password_hash);
+            console.log('Password match:', isMatch);
+            
+            if (!isMatch) {
+                return res.status(401).send('Invalid username or password.');
+            }
+
+            // Store user info in session
+            req.session.userId = user.id;
+            req.session.username = user.username;
+
+            res.redirect('/index.html');
+        } catch (error) {
+            console.error('Error during login:', error);
+            res.status(500).send('Internal server error.');
+        }
+    });
+
     // Logout route
     app.get('/logout', (req, res) => {
-        const logoutUrl = `https://ngoconnect.kinde.com/v2/logout?client_id=${process.env.CLIENT_ID}&returnTo=http://localhost:3000`; // Use environment variable
-        req.session.destroy();
-        res.redirect(logoutUrl);
+        const logoutUrl = `https://ngoconnect.kinde.com/v2/logout?client_id=${process.env.CLIENT_ID}&returnTo=http://localhost:3000`;
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error destroying session:', err);
+            }
+            res.redirect(logoutUrl);
+        });
     });
 
     // Serve receipts page
@@ -105,7 +197,7 @@ const startServer = () => {
         }
     });
 
-
+    // Registration route
     app.post('/register', async (req, res) => {
         const { name, username, email, phone_number, password } = req.body;
 
@@ -114,9 +206,14 @@ const startServer = () => {
         }
 
         try {
+            const exists = await userExists(username);
+            if (exists) {
+                return res.status(409).send('User already exists with this username or email.');
+            }
+
             const passwordHash = await hashPassword(password); 
             await insertUser(username, email, phone_number, passwordHash, name); 
-            res.status(201).send('User registered successfully');
+            res.redirect('/login.html');
         } catch (error) {
             console.error('Error inserting user:', error);
             res.status(500).send('Error registering user');
@@ -127,13 +224,13 @@ const startServer = () => {
     app.use(ngoRoutes);
     app.use(qrRoutes);
     app.use(profileRoutes);
+    
 
-    const PORT = process.env.PORT || 3000; // Use environment variable for the port
+    const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
     });
 };
-
 
 // Start connection retry
 connectWithRetry();

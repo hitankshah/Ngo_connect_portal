@@ -27,64 +27,93 @@
     <link rel="stylesheet" href="css/flaticon.css">
     <link rel="stylesheet" href="css/icomoon.css">
     <link rel="stylesheet" href="css/style.css">
-  </head>
-  <body>
-    
-  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">NGO Connect</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="oi oi-menu"></span> Menu
-      </button>
+</head>
+<body>
 
-      <div class="collapse navbar-collapse" id="ftco-nav">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-          <li class="nav-item"><a href="donate.html" class="nav-link">Donate</a></li>
-          <li class="nav-item"><a href="gallery.html" class="nav-link">Gallery</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-          <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
-          <li class="nav-item"><a href="/register" class="nav-link">Register</a></li>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">NGO Connect</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
 
-        </ul>
-      </div>
-    </div>
-  </nav>
-    
-    <div class="hero-wrap" style="background-image: url('images/ngo1.jpg');" data-stellar-background-ratio="0.5">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
-          <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
-            <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Doing Nothing is Not An Option of Our Life</h1>
-            <p class="mb-5" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Created by <a href="#">NGO Connect</a></p>
-
-          </div>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="/ngoRoutes.js" class="nav-link">Donate</a></li>
+                    <li class="nav-item"><a href="gallery.html" class="nav-link">Gallery</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                    <li class="nav-item" id="auth-links"></li>
+                </ul>
+            </div>
         </div>
-      </div>
+    </nav>
+
+    <div class="hero-wrap" style="background-image: url('images/ngo1.jpg');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-center justify-content-center" data-scrollax-parent="true">
+                <div class="col-md-7 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+                    <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Doing Nothing is Not An Option of Our Life</h1>
+                    <p class="mb-5" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Created by <a href="#">NGO Connect</a></p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <section class="ftco-counter ftco-intro" id="section-counter">
-    	<div class="container">
-    		<div class="row no-gutters">
-    			
-          <div class="col-md d-flex justify-content-center counter-wrap ftco-animate">
-            <div class="block-18 color-2 align-items-stretch">
-              <div class="text">
-                <center>
-              	<h3 class="mb-4">Donate Money</h3>
-              	<p>Even the all-powerful Pointing has no control about the blind texts.</p>
-              	<p> <a href="donate.html" class="btn btn-white px-3 py-2 mt-2">Donate Now</a></p>
-                
-              </center>
-              </div>
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-md d-flex justify-content-center counter-wrap ftco-animate">
+                    <div class="block-18 color-2 align-items-stretch">
+                        <div class="text">
+                            <center>
+                                <h3 class="mb-4">Donate Money</h3>
+                                <p>Even the all-powerful Pointing has no control about the blind texts.</p>
+                                <p><a href="donate.html" class="btn btn-white px-3 py-2 mt-2">Donate Now</a></p>
+                            </center>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          
-    		</div>
-    	</div>
+        </div>
     </section>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> NGO Connect Portal</p>
+    </footer>
+
+    <script>
+        // Update the current year in the footer
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+        // Check if user is logged in
+        const username = localStorage.getItem('username'); // Retrieve username from local storage
+        const authLinks = document.getElementById('auth-links');
+
+        if (username) {
+            // If user is logged in, display welcome message and logout link
+            authLinks.innerHTML = `
+                <span class="nav-link">Welcome, ${username}!</span>
+                <a href="#" class="nav-link" id="logout">Logout</a>
+            `;
+        } else {
+            // If user is not logged in, display login and register links
+            authLinks.innerHTML = `
+                <a href="/login" class="nav-link">Login</a>
+                <a href="/register" class="nav-link">Register</a>
+            `;
+        }
+
+        // Handle logout
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'logout') {
+                localStorage.removeItem('username'); // Remove username from local storage
+                location.reload(); // Reload the page to update UI
+            }
+        });
+    </script>
 
     <section class="ftco-section">
     	<div class="container">
@@ -476,7 +505,7 @@
               <ul class="list-unstyled">
                 <li><a href="index.html" class="py-2 d-block">Home</a></li>
                 <li><a href="about.html" class="py-2 d-block">About</a></li>
-                <li><a href="donate.html" class="py-2 d-block">Donate</a></li>
+                <li><a href="/ngodetails" class="py-2 d-block">Donate</a></li>
                 <li><a href="/login" class="py-2 d-block">Login</a></li>
                 <li><a href="/register" class="py-2 d-block">Register</a></li>
                 
