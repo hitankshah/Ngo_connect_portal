@@ -1,22 +1,35 @@
+version: '3.8'
 services:
+  db:
+    image: mysql:8.0.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ngopassword  
+      MYSQL_DATABASE: ngo_portal       
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql
+    networks:
+      - ngo_network
+
   app:
     build: .
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
     environment:
       MYSQL_HOST: db
-      MYSQL_USER: ngouser
-      MYSQL_PASSWORD: ngopassword
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ngopassword  
       MYSQL_DATABASE: ngo_portal
-
-  db:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: ngo_portal
-      MYSQL_USER: ngouser
-      MYSQL_PASSWORD: ngopassword
+    depends_on:
+      - db
     ports:
-      - "3306:3306"
+      - "3000:3000"
+    networks:
+      - ngo_network
+
+networks:
+  ngo_network:
+    driver: bridge
+
+volumes:
+  db_data:

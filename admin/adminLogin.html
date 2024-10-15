@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Admin Login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h3 class="text-center">Admin Login</h3>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+            <p id="error-message" class="text-danger mt-2 text-center"></p> <!-- Error message container -->
+        </form>
+        <p class="text-center mt-3"><a href="#">Forgot password?</a></p>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Hardcoded credentials (for testing only, replace with dynamic checks)
+            const validAdmins = {
+                'Maharshi': '12345',
+                'Hitank': '12345',
+                'Vedant': '12345'
+            };
+
+            // Check credentials
+            if (validAdmins[username] && validAdmins[username] === password) {
+                window.location.href = 'admin.html'; // Redirect to admin page on successful login
+            } else {
+                document.getElementById('error-message').textContent = 'Invalid username or password!'; // Show error message
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

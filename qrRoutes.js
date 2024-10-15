@@ -1,7 +1,7 @@
 const express = require('express');
 const qrcode = require('qrcode');
 const path = require('path');
-const { generatePDF } = require('./pdfGenerator.js'); // Import your PDF generation logic
+const { generatePDF } = require('./pdfGenerator.js'); 
 const router = express.Router();
 
 // Array of NGO bank details

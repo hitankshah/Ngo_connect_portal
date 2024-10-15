@@ -167,7 +167,7 @@
 <body>
     <header>
         <div class="header-container">
-            <a class="navbar-brand" href="/index.html">NGO Connect</a>
+            <a class="navbar-brand" href="index.html">NGO Connect</a>
             <ul class="navbar-nav">
                 <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
                 <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
@@ -182,15 +182,9 @@
 
     <main class="login-container">
         <h1>Login</h1>
-        <form id="loginForm" method="POST" action="/api/login"> <!-- Adjust the action URL as needed -->
-            <div class="form-group">
-                <label for="loginId">Mobile Number or Email:</label>
-                <input type="text" id="loginId" name="loginId" required placeholder="Enter your mobile number or email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
-            </div>
+        <form action="/login" method="POST">
+            <input type="text" name="usernameOrEmail" placeholder="Username or Email" required>
+            <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
         <p>Don't have an account? <a href="register.html">Register here</a></p>
@@ -198,7 +192,11 @@
     </main>
 
     <footer>
-        <p>&copy; ${new Date().getFullYear()} NGO Connect Portal</p>
+        <p>&copy; <span id="currentYear"></span> NGO Connect Portal</p>
     </footer>
+
+    <script>
+        document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
 </body>
 </html>

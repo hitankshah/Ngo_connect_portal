@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NGO Connect - Register</title>
     <link rel="stylesheet" href="/styles/main.css">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.4/axios.min.js"></script>
+    <script src="scripts/register.js"></script>
     <!-- Improved CSS styles -->
     <style>
         body {
@@ -149,43 +150,38 @@
                 <li class="nav-item"><a href="donate.html" class="nav-link">Donate</a></li>
                 <li class="nav-item"><a href="gallery.html" class="nav-link">Gallery</a></li>
                 <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="/login" class="nav-link">Login</a></li>
-                <li class="nav-item"><a href="/register" class="nav-link">Register</a></li>
+                <li class="nav-item"><a href="/login.html" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="/register.html" class="nav-link">Register</a></li>
             </ul>
         </div>
     </header>
-
-    <main>
-        <h1>NGO Connect</h1>
-        <h2>Register for NGO Connect</h2>
-        <form id="registerForm" action="/register" method="POST">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
+    <form id="registerForm" action="/register" method="POST">
+        <div>
+            <label for="username">username:</label> 
+            <input type="text" id="username" name="username" required> 
+        </div>
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required> 
+        </div>
+        <div>
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <label for="confirmPassword">Confirm Password:</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
-            </div>
-            </div>
-            <div>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="confirmPassword">Confirm Passwordlabel>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <div>
             <button type="submit">Register</button>
-        </form>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 NGO Connect. All rights reserved.</p>
-    </footer>
-
-    <script src="/scripts/register.js"></script>
-</body>
-
-</html>
+        </div>
+    </form>
+    

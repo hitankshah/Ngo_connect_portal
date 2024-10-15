@@ -1,9 +1,8 @@
-require('dotenv').config();  // Load .env file
+require('dotenv').config();  
 const mysql = require('mysql2');
 
-// Create MySQL connection pool
 const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST || 'localhost',
+  host: process.env.MYSQL_HOST || 'db',
   user: process.env.MYSQL_USER || 'root',
   password: process.env.MYSQL_PASSWORD || 'ngopassword',
   database: process.env.MYSQL_DATABASE || 'ngo_portal',

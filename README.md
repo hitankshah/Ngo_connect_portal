@@ -5,8 +5,8 @@
 ## Features
 
 - List of 50 NGOs with details.
-- Donation functionality with Razorpay integration.
-- OTP-based authentication via Firebase.
+- Donation functionality.
+- OTP-based authentication. 
 - QR code generation for NGO payments.
 - Automatic generation of 80G donation receipts.
 - Fundraiser pages for individual NGOs with QR codes.
@@ -17,7 +17,6 @@
 - Node.js
 - Express.js
 - MySQL (Database)
-- Auth0 (Authentication)
 - PDFKit (PDF generation for donation receipts)
 - QR Code generation
 
@@ -43,7 +42,7 @@ You’ll need the following tools:
 2. Navigate to the project directory:
 
     ```bash
-    cd ngo-connect-portal
+    cd ngo_connect_portal
     ```
 
 3. Install the dependencies:
@@ -69,7 +68,7 @@ You’ll need the following tools:
     Run the following commands to create and configure the MySQL database:
 
     ```sql
-    CREATE DATABASE ngo_connect;
+    CREATE DATABASE ngo_portal;
     ```
 
 6. Start the application:
