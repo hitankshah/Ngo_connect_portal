@@ -8,7 +8,6 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      # Ensure the SQL file is copied to initialize the database
       - ./sql/ngo_portal.sql:/docker-entrypoint-initdb.d/ngo_portal.sql  
 
   app:
