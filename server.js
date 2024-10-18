@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
@@ -137,52 +138,6 @@ const startServer = () => {
         res.sendFile(path.join(__dirname, 'public', 'update-password.html'));
     });
 
-    // Login route
-    app.post('/login', async (req, res) => {
-        const { usernameOrEmail, password } = req.body;
-        console.log('Login attempt:', { usernameOrEmail, password: '[REDACTED]' });
-
-        if (!usernameOrEmail || !password) {
-            return res.status(400).send('Username or email and password are required.');
-        }
-
-        try {
-            const user = await findUser(usernameOrEmail);
-            console.log('User found:', user ? 'Yes' : 'No');
-
-            if (!user) {
-                return res.status(401).send('Invalid username or password.');
-            }
-
-            const isMatch = await bcrypt.compare(password, user.password_hash);
-            console.log('Password match:', isMatch);
-            
-            if (!isMatch) {
-                return res.status(401).send('Invalid username or password.');
-            }
-
-            // Store user info in session
-            req.session.userId = user.id;
-            req.session.username = user.username;
-
-            res.status(200).send('Login successful.');
-        } catch (error) {
-            console.error('Error during login:', error);
-            res.status(500).send('Internal server error.');
-        }
-    });
-
-    // Logout route
-    app.get('/logout', (req, res) => {
-        const logoutUrl = `https://ngoconnect.kinde.com/v2/logout?client_id=${process.env.CLIENT_ID}&returnTo=http://localhost:3000`;
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Error destroying session:', err);
-            }
-            res.redirect(logoutUrl);
-        });
-    });
-
     // Serve receipts page
     app.get("/receipts", (req, res) => {
         res.sendFile(path.join(__dirname, 'receipts', 'receipts.html'));
@@ -197,40 +152,99 @@ const startServer = () => {
         }
     });
 
-    // Registration route
-    app.post('/register', async (req, res) => {
-        const { name, username, email, phone_number, password } = req.body;
 
-        if (!name || !username || !email || !phone_number || !password) {
-            return res.status(400).send('All fields are required.');
+
+// ... (existing imports and setup)
+
+// Update the registration route
+app.post('/register', async (req, res) => {
+    const { name, username, email, phone_number, password } = req.body;
+
+    if (!name || !username || !email || !phone_number || !password) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    try {
+        const exists = await userExists(username);
+        if (exists) {
+            return res.status(409).json({ error: 'User already exists with this username or email.' });
         }
 
-        try {
-            const exists = await userExists(username);
-            if (exists) {
-                return res.status(409).send('User already exists with this username or email.');
-            }
+        const passwordHash = await hashPassword(password);
+        await insertUser(username, email, phone_number, passwordHash, name);
+        res.status(201).json({ message: 'User registered successfully', redirect: '/login' });
+    } catch (error) {
+        console.error('Error inserting user:', error);
+        res.status(500).json({ error: 'Error registering user' });
+    }
+});
 
-            const passwordHash = await hashPassword(password); 
-            await insertUser(username, email, phone_number, passwordHash, name); 
-            res.status(201).send('User registered successfully');
-        } catch (error) {
-            console.error('Error inserting user:', error);
-            res.status(500).send('Error registering user');
+// Update the login route
+app.post('/login', async (req, res) => {
+    const { usernameOrEmail, password } = req.body;
+
+    if (!usernameOrEmail || !password) {
+        return res.status(400).json({ error: 'Username or email and password are required.' });
+    }
+
+    try {
+        const user = await findUser(usernameOrEmail);
+
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid username or password.' });
         }
-    });
 
-    // Use the NGO, QR, and profile routes
-    app.use(ngoRoutes);
-    app.use(qrRoutes);
-    app.use(profileRoutes);
-    
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+        
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Invalid username or password.' });
+        }
 
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-        console.log(`Server running on http://localhost:${PORT}`);
+        // Store user info in session
+        req.session.userId = user.id;
+        req.session.username = user.username;
+
+        res.status(200).json({ message: 'Login successful', redirect: '/index.html' });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+// Add a route to check if user is logged in
+app.get('/api/user', (req, res) => {
+    if (req.session.userId) {
+        res.json({ loggedIn: true, username: req.session.username });
+    } else {
+        res.json({ loggedIn: false });
+    }
+});
+
+// Update the logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).json({ error: 'Error logging out' });
+        }
+        res.json({ message: 'Logged out successfully', redirect: '/index.html' });
     });
+});
+
+// ... (rest of the server code)
+
+// Use the NGO, QR, and profile routes
+app.use(ngoRoutes);
+app.use(qrRoutes);
+app.use(profileRoutes);
+
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
 };
 
 // Start connection retry
 connectWithRetry();
+
