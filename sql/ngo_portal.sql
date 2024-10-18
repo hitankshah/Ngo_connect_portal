@@ -1,3 +1,4 @@
+
 -- MySQL dump 10.13  Distrib 8.0.0-dmr, for Linux (x86_64)
 --
 -- Host: localhost    Database: ngo_portal
@@ -24,7 +25,7 @@ DROP TABLE IF EXISTS `admin_users`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `admin_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT 'Admin',
+  `username` varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT 'Admin',
   `email` varchar(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password_hash` varchar(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
@@ -40,6 +41,9 @@ CREATE TABLE `admin_users` (
 LOCK TABLES `admin_users` WRITE;
 /*!40000 ALTER TABLE `admin_users` DISABLE KEYS */;
 INSERT INTO `admin_users` VALUES (1,'Admin User','admin@ngoconnectportal.com','$2b$10$C6UzMDM.H6dfI/f/IKcG.e6jx5X1J6lCZLxRtUkgz2HxqgXKqhqjW','2024-10-15 06:55:06');
+
+INSERT INTO `admin_users` VALUES (2,'admin','admin@gmail.com','$2b$10$kH9/r4zYDsMMcsIgw8ImWeNbbx/cROvnVg7Pd6/r5iNBXbZ9UG1M6','2024-10-18 08:55:00');
+
 /*!40000 ALTER TABLE `admin_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
