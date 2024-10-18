@@ -188,6 +188,53 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/api/user');
+            const data = await response.json();
+    
+            if (data.loggedIn) {
+                const navbarNav = document.querySelector('.navbar-nav');
+                const loginLink = document.querySelector('.nav-item a[href="/login"]');
+                const registerLink = document.querySelector('.nav-item a[href="/register"]');
+    
+                // Remove login and register links
+                if (loginLink) loginLink.parentElement.remove();
+                if (registerLink) registerLink.parentElement.remove();
+    
+                // Add greeting and logout button
+                const greetingItem = document.createElement('li');
+                greetingItem.className = 'nav-item';
+                greetingItem.innerHTML = `<span class="nav-link">Hi, ${data.username}</span>`;
+                navbarNav.appendChild(greetingItem);
+    
+                const logoutItem = document.createElement('li');
+                logoutItem.className = 'nav-item';
+                logoutItem.innerHTML = '<a href="#" class="nav-link" id="logout">Logout</a>';
+                navbarNav.appendChild(logoutItem);
+    
+                // Add logout functionality
+                document.getElementById('logout').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    try {
+                        const response = await fetch('/logout');
+                        const data = await response.json();
+                        if (response.ok) {
+                            window.location.href = data.redirect;
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('An error occurred during logout');
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+    </script>
     
   </body>
 </html>
