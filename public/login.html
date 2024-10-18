@@ -198,5 +198,36 @@
     <script>
         document.getElementById("currentYear").textContent = new Date().getFullYear();
     </script>
+
+<script>
+    document.querySelector('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const userData = Object.fromEntries(formData.entries());
+    
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during login');
+        }
+    });
+    </script>
+    
+
 </body>
 </html>
