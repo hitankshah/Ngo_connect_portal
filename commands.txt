@@ -43,3 +43,12 @@ docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopas
 Export
 
 docker exec ngo_connect_portal-db-1 /usr/bin/mysqldump -u root --password=ngopassword --complete-insert --extended-insert --single-transaction ngo_portal > sql/ngo_portal.sql
+
+
+
+
+
+import
+
+
+docker exec -i ngo_connect_portal-db-1 /usr/bin/mysql -u root --password=ngopassword ngo_portal < sql/ngo_portal.sql
