@@ -33,17 +33,20 @@ const findUser = async (usernameOrEmail) => {
 };
 
 // Function to find an admin by username
-const findAdmin = async (username) => {
+const findAdmin = async (usernameOrEmail) => {
     return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM admin_users WHERE username = ?';
-        db.query(query, [username], (error, results) => {
+        const query = 'SELECT * FROM admin_users WHERE username = ? OR email = ?';
+        db.query(query, [usernameOrEmail, usernameOrEmail], (error, results) => {
             if (error) {
+                console.error('Database error:', error);
                 return reject(error);
             }
+            console.log('Admin search results:', results);
             resolve(results[0]); // Return the first matched admin
         });
     });
 };
+
 
 // Middleware for parsing JSON data
 app.use(express.json());
@@ -220,28 +223,39 @@ const startServer = () => {
     // Admin login route
     app.post('/admin/login', async (req, res) => {
         const { username, password } = req.body;
-
+        console.log('Login attempt:', { username, password: '****' });
+    
         if (!username || !password) {
-            return res.status(400).json({ error: 'Username and password are required.' });
+            return res.status(400).json({ error: 'Username/email and password are required.' });
         }
-
+    
         try {
             const admin = await findAdmin(username);
-
+            console.log('Admin found:', admin ? 'Yes' : 'No');
+    
             if (!admin) {
-                return res.status(401).json({ error: 'Invalid username or password.' });
+                return res.status(401).json({ error: 'Invalid username/email or password.' });
             }
-
-            const isMatch = await bcrypt.compare(password, admin.password_hash);
+    
+            let isMatch;
+            if (admin.password_hash.startsWith('$2b$') || admin.password_hash.startsWith('$2a$')) {
+                // If the password is hashed, use bcrypt to compare
+                isMatch = await bcrypt.compare(password, admin.password_hash);
+            } else {
+                // If the password is not hashed, compare directly
+                isMatch = (password === admin.password_hash);
+            }
+            console.log('Password match:', isMatch);
             
             if (!isMatch) {
-                return res.status(401).json({ error: 'Invalid username or password.' });
+                return res.status(401).json({ error: 'Invalid username/email or password.' });
             }
-
+    
             // Store admin info in session
             req.session.adminId = admin.id;
             req.session.adminUsername = admin.username;
-
+            console.log('Admin session created:', { adminId: admin.id, adminUsername: admin.username });
+    
             res.status(200).json({ message: 'Admin login successful', redirect: '/dashboard.html' });
         } catch (error) {
             console.error('Error during admin login:', error);
