@@ -52,3 +52,7 @@ import
 
 
 docker exec -i ngo_connect_portal-db-1 /usr/bin/mysql -u root --password=ngopassword ngo_portal < sql/ngo_portal.sql
+
+import
+
+Get-Content .\sql\ngo_portal.sql | docker exec -i ngo_connect_portal-db-1 /usr/bin/mysql -u root --password=ngopassword ngo_portal
