@@ -426,6 +426,29 @@ app.post('/admin/updateNgo', (req, res) => {
         });
     });
 });
+//hit and trail
+app.post('/api/admin/addNgo', (req, res) => {
+    const { name, description, work, address, charity_id, pan_number, upi_id } = req.body;
+
+    if (!name || !description || !work || !address || !charity_id || !pan_number || !upi_id) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    // SQL query to insert the new NGO into the database
+    const query = `
+        INSERT INTO ngos (name, description, work, address, charity_id, pan_number, upi_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(query, [name, description, work, address, charity_id, pan_number, upi_id], (error, results) => {
+        if (error) {
+            console.error('Error inserting NGO:', error);
+            return res.status(500).json({ error: 'Failed to add NGO' });
+        }
+        res.status(201).json({ message: 'NGO added successfully' });
+    });
+});
+
 
 // Add middleware to check admin authentication
 const checkAdminAuth = (req, res, next) => {
