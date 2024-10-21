@@ -17,6 +17,12 @@
             padding: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+        .invalid-feedback {
+            display: none;
+        }
+        .was-validated .form-control:invalid ~ .invalid-feedback {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -51,34 +57,41 @@
         <section class="mt-4">
             <h3 class="text-center">Add NGO Details</h3>
             <div class="ngo-form mt-4">
-                <form id="addNgoForm">
+                <form id="addNgoForm" novalidate>
                     <div class="form-group">
                         <label for="ngoName">NGO Name</label>
-                        <input type="text" class="form-control" id="ngoName" name="ngoName" required>
+                        <input type="text" class="form-control" id="ngoName" name="name" required>
+                        <div class="invalid-feedback">Please provide an NGO name.</div>
                     </div>
                     <div class="form-group">
                         <label for="ngoDescription">Description</label>
-                        <textarea class="form-control" id="ngoDescription" name="ngoDescription" required></textarea>
+                        <textarea class="form-control" id="ngoDescription" name="description" required></textarea>
+                        <div class="invalid-feedback">Please provide a description.</div>
                     </div>
                     <div class="form-group">
                         <label for="ngoWork">Work</label>
-                        <textarea class="form-control" id="ngoWork" name="ngoWork" required></textarea>
+                        <textarea class="form-control" id="ngoWork" name="work" required></textarea>
+                        <div class="invalid-feedback">Please describe the NGO's work.</div>
                     </div>
                     <div class="form-group">
                         <label for="ngoAddress">Address</label>
-                        <input type="text" class="form-control" id="ngoAddress" name="ngoAddress" required>
+                        <input type="text" class="form-control" id="ngoAddress" name="address" required>
+                        <div class="invalid-feedback">Please provide an address.</div>
                     </div>
                     <div class="form-group">
                         <label for="ngoCharityId">Charity ID</label>
-                        <input type="text" class="form-control" id="ngoCharityId" name="ngoCharityId" required>
+                        <input type="text" class="form-control" id="ngoCharityId" name="charity_id" required>
+                        <div class="invalid-feedback">Please provide a charity ID.</div>
                     </div>
                     <div class="form-group">
                         <label for="ngoPanNumber">PAN Number</label>
-                        <input type="text" class="form-control" id="ngoPanNumber" name="ngoPanNumber" required>
+                        <input type="text" class="form-control" id="ngoPanNumber" name="pan_number" required>
+                        <div class="invalid-feedback">Please provide a PAN number.</div>
                     </div>
                     <div class="form-group">
                         <label for="ngoUPIID">UPI ID</label>
-                        <input type="text" class="form-control" id="ngoUPIID" name="ngoUPIID" required>
+                        <input type="text" class="form-control" id="ngoUPIID" name="upi_id" required>
+                        <div class="invalid-feedback">Please provide a UPI ID.</div>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -109,20 +122,39 @@
             // Add NGO form submission
             $('#addNgoForm').submit(function(e) {
                 e.preventDefault();
-                const formData = new FormData(this);
+                
+                // Check form validity
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    $(this).addClass('was-validated');
+                    return;
+                }
 
+                // Collect form data
+                const formData = {
+                    name: $('#ngoName').val().trim(),
+                    description: $('#ngoDescription').val().trim(),
+                    work: $('#ngoWork').val().trim(),
+                    address: $('#ngoAddress').val().trim(),
+                    charity_id: $('#ngoCharityId').val().trim(),
+                    pan_number: $('#ngoPanNumber').val().trim(),
+                    upi_id: $('#ngoUPIID').val().trim()
+                };
+
+                // Send AJAX request
                 $.ajax({
                     url: '/add-ngo',
                     type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                    data: JSON.stringify(formData),
+                    contentType: 'application/json',
                     success: function(response) {
                         alert('NGO added successfully');
                         $('#addNgoForm')[0].reset();
+                        $('#addNgoForm').removeClass('was-validated');
                     },
                     error: function(jqXHR) {
-                        alert('Failed to add NGO: ' + (jqXHR.responseJSON?.error || 'Unknown error'));
+                        const errorMessage = jqXHR.responseJSON?.error || 'Unknown error occurred';
+                        alert('Failed to add NGO: ' + errorMessage);
                     }
                 });
             });

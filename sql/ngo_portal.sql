@@ -19,59 +19,85 @@
 -- Table structure for table admin_users
 --
 
-DROP TABLE IF EXISTS admin_users;
+-- Table structure for table admin_users
+DROP TABLE IF EXISTS admin_users;  -- Corrected line
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE admin_users (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  username varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT 'Admin',
-  password_hash varchar(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  created_at datetime DEFAULT CURRENT_TIMESTAMP,
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  username VARCHAR(255) COLLATE utf8mb4_0900_ai_ci DEFAULT 'Admin',
+  password_hash VARCHAR(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  email VARCHAR(255) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,  -- Added email column
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
 -- Dumping data for table admin_users
---
-
 LOCK TABLES admin_users WRITE;
 /*!40000 ALTER TABLE admin_users DISABLE KEYS */;
-INSERT INTO admin_users VALUES (2,'admin','admin','2024-10-18 08:55:00');
-INSERT INTO admin_users VALUES (3,'shah','shah@2001','2024-10-18 08:55:00');
-
-
+INSERT INTO admin_users (id, username, password_hash, email, created_at) VALUES 
+(2, 'admin', 'admin', 'admin@ngoconnectportal.com', '2024-10-18 08:55:00'),
+(3, 'shah', 'shah@2001', 'shah@2001', '2024-10-18 08:55:00');  -- Corrected insert
 /*!40000 ALTER TABLE admin_users ENABLE KEYS */;
 UNLOCK TABLES;
 
---
 -- Table structure for table users
---
-
 DROP TABLE IF EXISTS users;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE users (
-  id int(11) NOT NULL AUTO_INCREMENT,
-  name varchar(255) COLLATE utf8mb4_0900_ai_ci DEFAULT 'Guest',
-  email varchar(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  phone_number varchar(20) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  password_hash varchar(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  created_at datetime DEFAULT CURRENT_TIMESTAMP,
-  username varchar(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) COLLATE utf8mb4_0900_ai_ci DEFAULT 'Guest',
+  email VARCHAR(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  phone_number VARCHAR(20) COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  password_hash VARCHAR(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  username VARCHAR(255) COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY email (email)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table users
---
-
+/* Dumping data for table users */
 LOCK TABLES users WRITE;
 /*!40000 ALTER TABLE users DISABLE KEYS */;
-INSERT INTO users VALUES (1,'Hitank Shah','HITANKJAIN@GMAIL.COM','08955665499','$2b$10$gHhaBra4PFqclLaCR/yxpOwwb0iBNpnC37UwgIt76ihadxiOqfnc2','2024-10-14 14:26:32','hitankshah'),(3,'HITANK SHAH','HITANKJAIN89@GMAIL.COM','8955665499','$2b$10$Vw54UJIjuYuj4PpC6vLPGu4Z9WlMH/3W3Ine2q.lm0Dq4vNdw4Dbu','2024-10-14 17:33:04','hitankshah'),(4,'admin','admin@ngoconnectportal.com','8955665499','$2b$10$UGAcJSMhY34oUubXwyp/au.TmaSkR3/sL00jeA0Gix9bqaKW3lBa2','2024-10-14 17:33:35','admin'),(5,'Adminsjaj','Shah@gmail.com','8955665499','$2b$10$XrkmXqQZiVi8NxYT4kWk4O6zL5rsHmKcVtoXaNwXY4VTvZLUQkfaS','2024-10-15 08:43:15','Admin1'),(7,'shahaha','shaha@gmail.com','8003018613','$2b$10$lT4t9Ab3C8Z5Muw8hDNcTugchUAmX9uoAT6boie7HIr963VcWhOGG','2024-10-15 08:50:20','shahhitank'),(9,'vedant02','vedant02@gmail.com','vedant02','$2b$10$AzvXhgY2xiITnje6Ukron.sCYmVmqM.8tG9a4qw35CM0eEj/g.QIy','2024-10-18 08:49:16','vedant02');
+INSERT INTO users (id, name, email, phone_number, password_hash, created_at, username) VALUES 
+(1, 'Hitank Shah', 'HITANKJAIN@GMAIL.COM', '08955665499', '$2b$10$gHhaBra4PFqclLaCR/yxpOwwb0iBNpnC37UwgIt76ihadxiOqfnc2', '2024-10-14 14:26:32', 'hitankshah'),
+(3, 'HITANK SHAH', 'HITANKJAIN89@GMAIL.COM', '8955665499', '$2b$10$Vw54UJIjuYuj4PpC6vLPGu4Z9WlMH/3W3Ine2q.lm0Dq4vNdw4Dbu', '2024-10-14 17:33:04', 'hitankshah'),
+(4, 'admin', 'admin@ngoconnectportal.com', '8955665499', '$2b$10$UGAcJSMhY34oUubXwyp/au.TmaSkR3/sL00jeA0Gix9bqaKW3lBa2', '2024-10-14 17:33:35', 'admin'),
+(5, 'Adminsjaj', 'Shah@gmail.com', '8955665499', '$2b$10$XrkmXqQZiVi8NxYT4kWk4O6zL5rsHmKcVtoXaNwXY4VTvZLUQkfaS', '2024-10-15 08:43:15', 'Admin1'),
+(7, 'shahaha', 'shaha@gmail.com', '8003018613', '$2b$10$lT4t9Ab3C8Z5Muw8hDNcTugchUAmX9uoAT6boie7HIr963VcWhOGG', '2024-10-15 08:50:20', 'shahhitank'),
+(9, 'vedant02', 'vedant02@gmail.com', 'vedant02', '$2b$10$AzvXhgY2xiITnje6Ukron.sCYmVmqM.8tG9a4qw35CM0eEj/g.QIy', '2024-10-18 08:49:16', 'vedant02');
 /*!40000 ALTER TABLE users ENABLE KEYS */;
 UNLOCK TABLES;
+
+-- Create NGO table
+CREATE TABLE IF NOT EXISTS ngos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  work TEXT,
+  address VARCHAR(255),
+  charity_id VARCHAR(100),
+  pan_number VARCHAR(20),
+  upi_id VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert NGO data (to be used in your server-side code)
+INSERT INTO ngos (name, description, work, address, charity_id, pan_number, upi_id)
+VALUES ('NGO Name', 'Description of the NGO', 'Work done by the NGO', 'Address of the NGO', 'Charity ID', 'PAN Number', 'UPI ID');
+
+INSERT INTO ngos (name, upi_id, description) VALUES
+    ('Narayan Seva', 'narayanseva@sbi', 'Supporting community welfare'),
+    ('battleforblindness', '8383933493@okbizaxis', 'Supporting visually impaired individuals'),
+    ('cankidsindia', 'mswipe.cankides@kotak', 'Supporting children with cancer'),
+    ('humana-india', 'humabpeople@icici', 'Humanitarian aid and development'),
+    ('Helping Hearts for the needy', '9849590233@hdfcbank', 'Supporting underprivileged communities'),
+    ('indiagivesfoundation', 'QR918277529316-0322@unionbankofindia', 'Supporting various social causes'),
+    ('National Association for the Blind', 'natio96119208@barodampay', 'Supporting visually impaired people'),
+    ('sevalaya', 'SEVALAYA.08@CMSIDFC', 'Community service and education'),
+    ('shikshafoundation', 'shikshafoundation@icici', 'Education for underprivileged children'),
+    ('tratr', 'tratrfoundation.62344909@hdfcbank', 'Community development initiatives'),
+    ('Vatsalya Societies', 'VATSALYA1@icici', 'Child welfare and development'),
+    ('hitankshah', 'hitankjain@oksbi', 'Supporting social causes');
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */; 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

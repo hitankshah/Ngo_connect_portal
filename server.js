@@ -291,6 +291,26 @@ const startServer = () => {
             res.json({ message: 'Logged out successfully', redirect: '/index.html' });
         });
     });
+// Add NGO route
+app.post('/add-ngo', (req, res) => {
+    const { name, description, work, address, charity_id, pan_number, upi_id } = req.body;
+
+    // Validate required fields
+    if (!name || !description || !work || !address || !charity_id || !pan_number || !upi_id) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    const sql = 'INSERT INTO ngos (name, description, work, address, charity_id, pan_number, upi_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const values = [name, description, work, address, charity_id, pan_number, upi_id];
+
+    db.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Error inserting NGO: ', error);
+            return res.status(500).json({ error: 'Failed to add NGO' });
+        }
+        res.json({ message: 'NGO added successfully' });
+    });
+});
 
     // Use the NGO, QR, and profile routes
     app.use(ngoRoutes);

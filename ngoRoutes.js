@@ -1,128 +1,201 @@
 const express = require('express');
-const qrcode = require('qrcode');
 const router = express.Router();
+const qrcode = require('qrcode');
+const mysql = require('mysql2/promise');
 
-// Array of NGO bank details
-const ngos = [
-  { id: 1, upiID: 'narayanseva@sbi', ngoName: 'Narayan Seva' },
-  { id: 2, upiID: '8383933493@okbizaxis', ngoName: 'battleforblindness' },
-  { id: 3, upiID: 'mswipe.cankides@kotak', ngoName: 'cankidsindia' },
-  { id: 4, upiID: 'humabpeople@icici', ngoName: 'humana-india' },
-  { id: 5, upiID: '9849590233@hdfcbank', ngoName: 'Helping Hearts for the needy' },
-  { id: 6, upiID: 'QR918277529316-0322@unionbankofindia', ngoName: 'indiagivesfoundation' },
-  { id: 7, upiID: 'natio96119208@barodampay', ngoName: 'National Association for the Blind' },
-  { id: 8, upiID: 'SEVALAYA.08@CMSIDFC', ngoName: 'sevalaya' },
-  { id: 9, upiID: 'shikshafoundation@icici', ngoName: 'shikshafoundation' },
-  { id: 10, upiID: 'tratrfoundation.62344909@hdfcbank', ngoName: 'tratr' },
-  { id: 11, upiID: 'VATSALYA1@icici', ngoName: 'Vatsalya Societies' }
-];
 
-// Home route to list all NGOs with links to their donation pages
-router.get('/ngodetails', (req, res) => {
-  const ngoLinks = ngos.map(ngo => `<li class="list-group-item"><a href="/ngo/${ngo.id}">${ngo.ngoName}</a></li>`).join('');
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>NGO QR Code Payment</title>
-      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-      <div class="container mt-5">
-        <h1>Select an NGO to Donate</h1>
-        <ul class="list-group">${ngoLinks}</ul>
-      </div>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-    </html>
-  `);
-});
+// Database configuration
+const dbConfig = {
+    host: process.env.DB_HOST || 'db',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'ngopassword',
+    database: process.env.DB_NAME || 'ngo_portal',
+};
 
-// Serve a form to input the amount and generate the QR code for the selected NGO
-router.get('/ngo/:id', (req, res) => {
-  const ngo = ngos.find(n => n.id === parseInt(req.params.id));
-  if (!ngo) {
-    return res.status(404).send('NGO not found');
-  }
 
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Donate to ${ngo.ngoName}</title>
-      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-      <div class="container mt-5">
-        <h1>Donate to ${ngo.ngoName}</h1>
-        <form action="/generate-qr/${ngo.id}" method="POST">
-          <div class="form-group">
-            <label for="amount">Enter Amount (INR): </label>
-            <input type="number" id="amount" name="amount" class="form-control" min="1" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Generate QR Code</button>
-        </form>
-      </div>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
-    </html>
-  `);
-});
+// Create database connection pool
+const pool = mysql.createPool(dbConfig);
 
-// Handle form submission and generate the QR code with the dynamic amount and UPI deep link
-router.post('/generate-qr/:id', (req, res) => {
-  const ngo = ngos.find(n => n.id === parseInt(req.params.id));
-  if (!ngo) {
-    return res.status(404).send('NGO not found');
-  }
+// Route to handle form submission and add the NGO to the database
+router.post('/add-ngo', async (req, res) => {
+    const { ngoName, ngoDescription, ngoWork, ngoAddress, ngoCharityId, ngoPanNumber, ngoUPIID } = req.body;
 
-  const amount = req.body.amount;
-  const qrData = `upi://pay?pa=${ngo.upiID}&pn=${ngo.ngoName}&am=${amount}&cu=INR`;
-
-  // Generate QR code
-  qrcode.toDataURL(qrData, function (err, url) {
-    if (err) {
-      console.error(`Error generating QR code for ${ngo.ngoName}`, err);
-      return res.status(500).send('Error generating QR code');
+    if (!ngoName || !ngoUPIID) {
+        return res.status(400).json({ message: 'NGO name and UPI ID are required.' });
     }
 
-    // Send the receipt with NGO name, amount, QR code, and UPI deep link
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>QR Code for ${ngo.ngoName}</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-      </head>
-      <body>
-        <div class="container mt-5">
-          <h1>Donation Receipt for ${ngo.ngoName}</h1>
-          <p>Thank you for donating INR ${amount} to ${ngo.ngoName}.</p>
-          <h2>Scan the QR Code to Complete the Payment</h2>
-          <img src="${url}" alt="QR Code" class="img-fluid">
-          <p>Amount: INR ${amount}</p>
-          <h2>Or click the link below to pay:</h2>
-          <a href="${qrData}" class="btn btn-success">Pay INR ${amount} to ${ngo.ngoName} via UPI</a>
-          <br><br>
-          <a href="/ngo/${ngo.id}" class="btn btn-secondary">Go Back</a>
-        </div>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-      </body>
-      </html>
-    `);
-  });
+    try {
+        const [result] = await pool.execute(
+            'INSERT INTO ngos (name, description, work, address, charity_id, pan_number, upi_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [ngoName, ngoDescription, ngoWork, ngoAddress, ngoCharityId, ngoPanNumber, ngoUPIID]
+        );
+
+        res.status(201).json({ 
+            message: 'NGO added successfully',
+            ngoId: result.insertId
+        });
+    } catch (error) {
+        console.error('Error adding NGO:', error);
+        res.status(500).json({ message: 'Error adding NGO to database' });
+    }
+});
+
+// Route to display NGO details and form to enter donation amount
+router.get('/ngo/:id', async (req, res) => {
+    try {
+        const [rows] = await pool.execute(
+            'SELECT * FROM ngos WHERE id = ?',
+            [req.params.id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).send('NGO not found');
+        }
+
+        const ngo = rows[0];
+
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Donate to ${ngo.name}</title>
+                <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+            </head>
+            <body>
+                <div class="container mt-5">
+                    <h1>Donate to ${ngo.name}</h1>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">NGO Details</h5>
+                            <p class="card-text"><strong>Description:</strong> ${ngo.description}</p>
+                            <p class="card-text"><strong>Work:</strong> ${ngo.work}</p>
+                            <p class="card-text"><strong>Address:</strong> ${ngo.address}</p>
+                        </div>
+                    </div>
+                    <form action="/generate-qr/${ngo.id}" method="POST">
+                        <div class="form-group">
+                            <label for="amount">Enter Amount (INR): </label>
+                            <input type="number" id="amount" name="amount" class="form-control" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Generate QR Code</button>
+                    </form>
+                </div>
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </body>
+            </html>
+        `);
+    } catch (error) {
+        console.error('Error fetching NGO details:', error);
+        res.status(500).send('Error fetching NGO details');
+    }
+});
+
+// Route to handle form submission and generate QR code for UPI payment
+router.post('/generate-qr/:id', async (req, res) => {
+    try {
+        const [rows] = await pool.execute(
+            'SELECT * FROM ngos WHERE id = ?',
+            [req.params.id]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).send('NGO not found');
+        }
+
+        const ngo = rows[0];
+        const amount = req.body.amount;
+        const qrData = `upi://pay?pa=${ngo.upi_id}&pn=${ngo.name}&am=${amount}&cu=INR`;
+
+        qrcode.toDataURL(qrData, function (err, url) {
+            if (err) {
+                console.error(`Error generating QR code for ${ngo.name}`, err);
+                return res.status(500).send('Error generating QR code');
+            }
+
+            res.send(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>QR Code for ${ngo.name}</title>
+                    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+                </head>
+                <body>
+                    <div class="container mt-5">
+                        <h1>Donation Receipt for ${ngo.name}</h1>
+                        <p>Thank you for donating INR ${amount} to ${ngo.name}.</p>
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <h2>Scan the QR Code to Complete the Payment</h2>
+                                <img src="${url}" alt="QR Code" class="img-fluid mb-3">
+                                <p class="h4">Amount: INR ${amount}</p>
+                                <h3>Or click the link below to pay:</h3>
+                                <a href="${qrData}" class="btn btn-success btn-lg mb-3">Pay INR ${amount} to ${ngo.name} via UPI</a>
+                                <br>
+                                <a href="/ngo/${ngo.id}" class="btn btn-secondary">Go Back</a>
+                            </div>
+                        </div>
+                    </div>
+                    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                </body>
+                </html>
+            `);
+        });
+    } catch (error) {
+        console.error('Error generating QR code:', error);
+        res.status(500).send('Error generating QR code');
+    }
+});
+
+// Route to display all NGOs
+router.get('/ngodetails', async (req, res) => {
+    try {
+        const [rows] = await pool.execute('SELECT * FROM ngos ORDER BY name');
+
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>NGO Details</title>
+                <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+            </head>
+            <body>
+                <div class="container mt-5">
+                    <h1>List of NGOs</h1>
+                    <div class="row">
+                        ${rows.map(ngo => `
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${ngo.name}</h5>
+                                        <p class="card-text">${ngo.description}</p>
+                                        <p class="card-text"><small class="text-muted">UPI ID: ${ngo.upi_id}</small></p>
+                                        <a href="/ngo/${ngo.id}" class="btn btn-primary">Donate</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            </body>
+            </html>
+        `);
+    } catch (error) {
+        console.error('Error fetching NGOs:', error);
+        res.status(500).send('Error fetching NGO list');
+    }
 });
 
 module.exports = router;
