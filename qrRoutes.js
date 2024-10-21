@@ -16,7 +16,8 @@ const ngos = [
   { id: 8, upiID: 'SEVALAYA.08@CMSIDFC', ngoName: 'sevalaya' },
   { id: 9, upiID: 'shikshafoundation@icici', ngoName: 'shikshafoundation' },
   { id: 10, upiID: 'tratrfoundation.62344909@hdfcbank', ngoName: 'tratr' },
-  { id: 11, upiID: 'VATSALYA1@icici', ngoName: 'Vatsalya Societies' }
+  { id: 11, upiID: 'VATSALYA1@icici', ngoName: 'Vatsalya Societies' },
+  { id: 12, upiID: 'hitankjain@oksbi', ngoName: 'hitankshah' }
 ];
 
 // Handle form submission and generate the QR code with the dynamic amount
