@@ -312,6 +312,129 @@ app.post('/add-ngo', (req, res) => {
     });
 });
 
+// Fetch all NGOs
+app.get('/admin/ngos', (req, res) => {
+    const sql = 'SELECT * FROM ngos';
+    db.query(sql, (error, results) => {
+        if (error) {
+            console.error('Error fetching NGOs:', error);
+            return res.status(500).json({ error: 'Failed to fetch NGOs' });
+        }
+        res.json(results);
+    });
+});
+// Delete an NGO
+app.post('/admin/deleteNgo', (req, res) => {
+    const { ngoId } = req.body;
+
+    // Ensure ngoId is provided
+    if (!ngoId) {
+        return res.status(400).json({ error: 'NGO ID is required' });
+    }
+
+    const sql = 'DELETE FROM ngos WHERE id = ?';
+    db.query(sql, [ngoId], (error, results) => {
+        if (error) {
+            console.error('Error deleting NGO:', error);
+            return res.status(500).json({ error: 'Failed to delete NGO' });
+        }
+        // Check if any row was affected
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'NGO not found' });
+        }
+        res.json({ success: true });
+    });
+});
+
+// Fetch a single NGO by ID
+app.get('/admin/ngos/:id', (req, res) => {
+    const ngoId = req.params.id;
+    
+    if (!ngoId) {
+        return res.status(400).json({ error: 'NGO ID is required' });
+    }
+
+    const sql = 'SELECT * FROM ngos WHERE id = ?';
+    db.query(sql, [ngoId], (error, results) => {
+        if (error) {
+            console.error('Error fetching NGO:', error);
+            return res.status(500).json({ error: 'Failed to fetch NGO details' });
+        }
+        
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'NGO not found' });
+        }
+        
+        res.json(results[0]);
+    });
+});
+
+// Update NGO details
+app.post('/admin/updateNgo', (req, res) => {
+    const { 
+        id, 
+        name, 
+        description, 
+        work, 
+        address, 
+        charity_id, 
+        pan_number, 
+        upi_id 
+    } = req.body;
+
+    // Validate required fields
+    if (!id || !name || !description || !work || !address || !charity_id || !pan_number || !upi_id) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    const sql = `
+        UPDATE ngos 
+        SET name = ?, 
+            description = ?, 
+            work = ?, 
+            address = ?, 
+            charity_id = ?, 
+            pan_number = ?, 
+            upi_id = ? 
+        WHERE id = ?
+    `;
+
+    const values = [
+        name,
+        description,
+        work,
+        address,
+        charity_id,
+        pan_number,
+        upi_id,
+        id
+    ];
+
+    db.query(sql, values, (error, results) => {
+        if (error) {
+            console.error('Error updating NGO:', error);
+            return res.status(500).json({ error: 'Failed to update NGO' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'NGO not found' });
+        }
+
+        res.json({ 
+            message: 'NGO updated successfully',
+            ngoId: id
+        });
+    });
+});
+
+// Add middleware to check admin authentication
+const checkAdminAuth = (req, res, next) => {
+    if (!req.session.adminId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+};
+
     // Use the NGO, QR, and profile routes
     app.use(ngoRoutes);
     app.use(qrRoutes);
@@ -320,7 +443,8 @@ app.post('/add-ngo', (req, res) => {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
         console.log(`Server running on http://localhost:${PORT}`);
-    });
+    });let ngos = [];
+
 };
 
 // Start connection retry

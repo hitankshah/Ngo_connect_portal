@@ -34,11 +34,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="admin.html"><i class="fas fa-user-shield"></i> Admin</a>
                     </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="ngo_management.html"><i class="fas fa-users"></i> NGO Management</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="user_management.html"><i class="fas fa-users"></i> User Management</a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link" href="ngo_management.html"><i class="fas fa-building"></i> NGO Management</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -59,12 +59,9 @@
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Description</th>
-                        <th>Work</th>
+                        <th>Email</th>
                         <th>Address</th>
-                        <th>Charity ID</th>
-                        <th>PAN Number</th>
-                        <th>UPI ID</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -95,7 +92,7 @@
                 });
 
             // Load NGO list
-            function loadNGOList() {
+            function loadNgoList() {
                 $.get('/admin/ngos')
                     .done(function(data) {
                         const ngoListBody = $('#ngoListBody');
@@ -105,14 +102,11 @@
                                 <tr>
                                     <td>${ngo.id}</td>
                                     <td>${ngo.name}</td>
-                                    <td>${ngo.description}</td>
-                                    <td>${ngo.work}</td>
+                                    <td>${ngo.email}</td>
                                     <td>${ngo.address}</td>
-                                    <td>${ngo.charity_id}</td>
-                                    <td>${ngo.pan_number}</td>
-                                    <td>${ngo.upi_id}</td>
+                                    <td>${new Date(ngo.created_at).toLocaleString()}</td>
                                     <td>
-                                        <button class="btn btn-sm btn-primary edit-ngo" data-id="${ngo.id}">Edit</button>
+                                        <a href="editNgo.html?id=${ngo.id}" class="btn btn-sm btn-warning">Edit</a>
                                         <button class="btn btn-sm btn-danger delete-ngo" data-id="${ngo.id}">Delete</button>
                                     </td>
                                 </tr>
@@ -124,7 +118,7 @@
                     });
             }
 
-            loadNGOList();
+            loadNgoList();
 
             // Delete NGO
             $(document).on('click', '.delete-ngo', function() {
@@ -133,19 +127,12 @@
                     $.post('/admin/deleteNgo', { ngoId: ngoId })
                         .done(function() {
                             alert('NGO deleted successfully');
-                            loadNGOList();
+                            loadNgoList();
                         })
                         .fail(function(jqXHR) {
                             alert('Failed to delete NGO: ' + (jqXHR.responseJSON?.error || 'Unknown error'));
                         });
                 }
-            });
-
-            // Edit NGO
-            $(document).on('click', '.edit-ngo', function() {
-                const ngoId = $(this).data('id');
-                // Redirect to the edit page or show an edit form
-                window.location.href = `/admin/editNgo.html?id=${ngoId}`;
             });
 
             // Logout
