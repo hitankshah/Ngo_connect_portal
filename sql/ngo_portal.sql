@@ -98,6 +98,7 @@ INSERT INTO ngos (name, upi_id, description) VALUES
     ('tratr', 'tratrfoundation.62344909@hdfcbank', 'Community development initiatives'),
     ('Vatsalya Societies', 'VATSALYA1@icici', 'Child welfare and development'),
     ('hitankshah', 'hitankjain@oksbi', 'Supporting social causes');
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */; 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
