@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Edit NGO</title>
+    <title>Add New NGO</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container mt-5">
-        <h3>Edit NGO</h3>
-        <div id="loadingMessage" class="alert alert-info d-none">Loading NGO details...</div>
+        <h3>Add New NGO</h3>
+        <div id="successMessage" class="alert alert-success d-none">NGO added successfully!</div>
         <div id="errorMessage" class="alert alert-danger d-none"></div>
         
-        <form id="editNgoForm" class="d-none">
-            <input type="hidden" id="ngoId">
+        <form id="addNgoForm">
             <div class="form-group">
                 <label for="ngoName">Name</label>
                 <input type="text" class="form-control" id="ngoName" required>
@@ -37,13 +36,17 @@
             </div>
             <div class="form-group">
                 <label for="panNumber">PAN Number</label>
-                <input type="text" class="form-control" id="panNumber" required>
+                <input type="text" class="form-control" id="panNumber" required 
+                       pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
+                       title="Enter valid PAN number (e.g., ABCDE1234F)">
             </div>
             <div class="form-group">
                 <label for="upiId">UPI ID</label>
-                <input type="text" class="form-control" id="upiId" required>
+                <input type="text" class="form-control" id="upiId" required
+                       pattern="[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}"
+                       title="Enter valid UPI ID (e.g., user@bank)">
             </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="submit" class="btn btn-primary">Add NGO</button>
             <a href="ngo_management.html" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
@@ -51,73 +54,70 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
         $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ngoId = urlParams.get('id');
-
-            if (!ngoId) {
-                showError('No NGO ID provided');
-                return;
-            }
-
-            function showLoading() {
-                $('#loadingMessage').removeClass('d-none');
-                $('#errorMessage, #editNgoForm').addClass('d-none');
+            function showSuccess(message) {
+                $('#successMessage').removeClass('d-none').text(message);
+                $('#errorMessage').addClass('d-none');
+                // Clear the form
+                $('#addNgoForm')[0].reset();
             }
 
             function showError(message) {
                 $('#errorMessage').removeClass('d-none').text(message);
-                $('#loadingMessage, #editNgoForm').addClass('d-none');
+                $('#successMessage').addClass('d-none');
             }
-
-            function showForm() {
-                $('#editNgoForm').removeClass('d-none');
-                $('#loadingMessage, #errorMessage').addClass('d-none');
-            }
-
-            // Load NGO details
-            showLoading();
-            $.get(`/api/admin/ngos/${ngoId}`)
-                .done(function(data) {
-                    $('#ngoId').val(data.id);
-                    $('#ngoName').val(data.name);
-                    $('#ngoDescription').val(data.description);
-                    $('#ngoWork').val(data.work);
-                    $('#ngoAddress').val(data.address);
-                    $('#charityId').val(data.charity_id);
-                    $('#panNumber').val(data.pan_number);
-                    $('#upiId').val(data.upi_id);
-                    showForm();
-                })
-                .fail(function(jqXHR) {
-                    showError('Failed to load NGO details: ' + (jqXHR.responseJSON?.error || 'Unknown error'));
-                });
 
             // Handle form submission
-            $('#editNgoForm').on('submit', function(e) {
+            $('#addNgoForm').on('submit', function(e) {
                 e.preventDefault();
-                showLoading();
 
-                const updatedNgo = {
-                    id: $('#ngoId').val(),
-                    name: $('#ngoName').val(),
-                    description: $('#ngoDescription').val(),
-                    work: $('#ngoWork').val(),
-                    address: $('#ngoAddress').val(),
-                    charity_id: $('#charityId').val(),
-                    pan_number: $('#panNumber').val(),
-                    upi_id: $('#upiId').val(),
+                // Basic validation
+                const requiredFields = ['ngoName', 'ngoDescription', 'ngoWork', 'ngoAddress', 'charityId', 'panNumber', 'upiId'];
+                for (const field of requiredFields) {
+                    if (!$(`#${field}`).val().trim()) {
+                        showError(`Please fill in the ${field.replace('ngo', '').replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+                        return;
+                    }
+                }
+
+                // Validate PAN Number format
+                const panNumber = $('#panNumber').val().trim();
+                const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+                if (!panRegex.test(panNumber)) {
+                    showError('Please enter a valid PAN number (e.g., ABCDE1234F)');
+                    return;
+                }
+
+                // Validate UPI ID format
+                const upiId = $('#upiId').val().trim();
+                const upiRegex = /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64}$/;
+                if (!upiRegex.test(upiId)) {
+                    showError('Please enter a valid UPI ID (e.g., user@bank)');
+                    return;
+                }
+
+                const newNgo = {
+                    name: $('#ngoName').val().trim(),
+                    description: $('#ngoDescription').val().trim(),
+                    work: $('#ngoWork').val().trim(),
+                    address: $('#ngoAddress').val().trim(),
+                    charity_id: $('#charityId').val().trim(),
+                    pan_number: panNumber,
+                    upi_id: upiId
                 };
 
                 $.ajax({
-                    url: `/api/admin/updateNgo`,
+                    url: '/api/admin/addNgo',
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(updatedNgo),
-                    success: function() {
-                        window.location.href = 'ngo_management.html';
+                    data: JSON.stringify(newNgo),
+                    success: function(response) {
+                        showSuccess('NGO added successfully!');
+                        setTimeout(() => {
+                            window.location.href = 'ngo_management.html';
+                        }, 2000);
                     },
                     error: function(jqXHR) {
-                        showError('Failed to update NGO: ' + (jqXHR.responseJSON?.error || 'Unknown error'));
+                        showError('Failed to add NGO: ' + (jqXHR.responseJSON?.error || 'Unknown error'));
                     }
                 });
             });
