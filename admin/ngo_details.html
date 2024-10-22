@@ -8,6 +8,41 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+
+
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.html"><i class="fas fa-user-shield"></i> Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="user_management.html"><i class="fas fa-users"></i> User Management</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="ngo_management.html"><i class="fas fa-users"></i> Ngo Management</a>
+                    </li>
+                    <!-- <li class="nav-item active">
+                        <a class="nav-link" href="ngo_details.html"><i class="fas fa-building"></i> NGO Details</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="adminLogin.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+<br>
+
     <div class="container mt-5">
         <h3>Add New NGO</h3>
         <div id="successMessage" class="alert alert-success d-none">NGO added successfully!</div>
@@ -32,11 +67,11 @@
             </div>
             <div class="form-group">
                 <label for="charityId">Charity ID</label>
-                <input type="text" class="form-control" id="charityId" required>
+                <input type="text" class="form-control" id="charityId" >
             </div>
             <div class="form-group">
                 <label for="panNumber">PAN Number</label>
-                <input type="text" class="form-control" id="panNumber" required 
+                <input type="text" class="form-control" id="panNumber"  
                        pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
                        title="Enter valid PAN number (e.g., ABCDE1234F)">
             </div>
