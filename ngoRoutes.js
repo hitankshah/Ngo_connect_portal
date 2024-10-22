@@ -3,6 +3,7 @@ const router = express.Router();
 const qrcode = require('qrcode');
 const mysql = require('mysql2/promise');
 
+
 // Database configuration
 const dbConfig = {
     host: process.env.DB_HOST || 'db',
@@ -10,6 +11,7 @@ const dbConfig = {
     password: process.env.DB_PASSWORD || 'ngopassword',
     database: process.env.DB_NAME || 'ngo_portal',
 };
+
 
 // Create database connection pool
 const pool = mysql.createPool(dbConfig);
@@ -60,11 +62,6 @@ router.get('/ngo/:id', async (req, res) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Donate to ${ngo.name}</title>
                 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-                <style>
-                    body { background-color: #f8f9fa; }
-                    .container { margin-top: 30px; }
-                    .card { border: none; }
-                </style>
             </head>
             <body>
                 <div class="container mt-5">
@@ -127,11 +124,6 @@ router.post('/generate-qr/:id', async (req, res) => {
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>QR Code for ${ngo.name}</title>
                     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-                    <style>
-                        body { background-color: #f8f9fa; }
-                        .container { margin-top: 30px; }
-                        .card { border: none; }
-                    </style>
                 </head>
                 <body>
                     <div class="container mt-5">
@@ -175,20 +167,8 @@ router.get('/ngodetails', async (req, res) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>NGO Details</title>
                 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-                <link href="/css/styles.css" rel="stylesheet"> <!-- Link to your external CSS file -->
             </head>
             <body>
-                <header>
-                    <div class="header-container">
-                        <a class="navbar-brand" href="/index.html">NGO Connect</a>
-                        <ul class="navbar-nav">
-                            <li><a href="/index.html">Home</a></li>
-                            <li><a href="/ngodetails">Donate</a></li>
-                            <li><a href="/gallery.html">Gallery</a></li>
-                            <li><a href="/update-password.html">Update Password</a></li>
-                        </ul>
-                    </div>
-                </header>
                 <div class="container mt-5">
                     <h1>List of NGOs</h1>
                     <div class="row">
@@ -204,7 +184,7 @@ router.get('/ngodetails', async (req, res) => {
                                 </div>
                             </div>
                         `).join('')}
-                    </div
+                    </div>
                 </div>
                 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -212,10 +192,9 @@ router.get('/ngodetails', async (req, res) => {
             </body>
             </html>
         `);
-        
     } catch (error) {
         console.error('Error fetching NGOs:', error);
-        res.status(500).send('Error fetching NGOs');
+        res.status(500).send('Error fetching NGO list');
     }
 });
 
