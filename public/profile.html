@@ -127,7 +127,7 @@
                 <li><a href="//ngodetails">Donate</a></li>
                 <li><a href="/gallery.html">Gallery</a></li>
                 <li><a href="/update-password.html">Update Password</a></li>
-                <li><a href="/logout.html">Logout</a></li>
+                <ul class="navbar-nav" id="auth-links">
             </ul>
         </div>
     </header>
@@ -154,7 +154,7 @@
 
     <script src="/scripts/profile.js"></script>
 
-    <script>
+    <!-- <script>
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const response = await fetch('/api/user');
@@ -200,5 +200,49 @@
             }
         });
         </script>
+</body>
+</html> -->
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Fetch user details from the server
+        try {
+            const response = await fetch('/api/user');
+            const data = await response.json();
+
+            if (data.loggedIn) {
+                // Populate the user profile fields
+                document.getElementById('userName').textContent = data.username;
+                document.getElementById('userEmail').textContent = data.email;
+                document.getElementById('userJoinDate').textContent = data.joinDate;
+                document.getElementById('userDescription').textContent = data.about;
+
+                // Dynamically update auth links
+                const authLinks = document.getElementById('auth-links');
+                authLinks.innerHTML = `
+                    <span class="nav-link">Welcome, ${data.username}!</span>
+                    <a href="#" class="nav-link" id="logout">Logout</a>
+                `;
+
+                // Add logout functionality
+                document.getElementById('logout').addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const logoutResponse = await fetch('/logout');
+                    const logoutData = await logoutResponse.json();
+                    if (logoutResponse.ok) {
+                        localStorage.removeItem('username');
+                        window.location.href = '/login';
+                    }
+                });
+            } else {
+                // If user is not logged in, redirect to login page
+                window.location.href = '/login';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+</script>
 </body>
 </html>
