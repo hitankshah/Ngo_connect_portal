@@ -36,7 +36,7 @@ You’ll need the following tools:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/hitankshah/ngo-connect-portal.git
+    (https://github.com/hitankshah/Ngo_connect_portal)
     ```
 
 2. Navigate to the project directory:
